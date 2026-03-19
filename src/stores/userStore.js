@@ -4,44 +4,65 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import {getStore, useStore} from "./index.js";
 
+/**
+ * @typedef {object} User
+ * @property {string} cellphone
+ * @property {string} name
+ * @property {number} fieldHandy
+ * @property {number} screenHandy
+ */
+
+
 export class UserStore {
-    me = null
+    /** @type {User} */
+    me = undefined
     isLogin = false
     fieldRecords = [];
+    fieldCount = 0;
     screenRecords = [];
+    screenCount = 0;
+    showRecords = [];
+    rounding = undefined;
 
     constructor() {
         makeAutoObservable(this)
     }
 
-    async signIn(userId, password) {
-        try {
-            const loginResponse = await axios.post('/user/signIn', {
-                userId,
-                password
-            })
+    async signIn(cellphone, password) {
+        const loginResponse = await axios.post('/user/signIn', {
+            cellphone,
+            password
+        })
 
-            const { refreshToken, user } = loginResponse.data
-            // refreshToken → localStorage
-            localStorage.setItem('refreshToken', refreshToken)
-            this.user = user;
-            this.isLogin = true;
-            const recordResponse = await axios.post('/round/me', {
-
-            })
-
-        } catch (err) {
-            console.log(err)
-        }
+        const { accessToken, refreshToken, user } = loginResponse.data.data
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        this.me = user;
+        this.isLogin = true;
     }
 
-    async signUp(userId, password, name) {
-        try {
-            const {refreshToken} = await axios.post('/user/signUp', {
-                userId, password, name
-            });
-        } catch (e) {
-            console.log(e);
+    async signInWithToken() {
+        const loginResponse = await axios.post('/user/signInWithToken');
+        const { accessToken, refreshToken, user } = loginResponse.data.data
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        this.me = user;
+        this.isLogin = true;
+    }
+
+    async getCurrentRecord() {
+        const recordResponse = await axios.get('/round/me');
+        this.fieldRecords = recordResponse.data.data.field.records;
+        this.fieldCount = recordResponse.data.data.field.count;
+        this.screenRecords = recordResponse.data.data.screen.records;
+        this.screenCount = recordResponse.data.data.screen.count;
+    }
+
+    setShowRecord(tab) {
+        if(tab === 'field') {
+            this.showRecords = this.fieldRecords;
+        } else {
+            this.showRecords = this.screenRecords;
         }
     }
 

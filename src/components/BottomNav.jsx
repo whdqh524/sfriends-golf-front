@@ -14,7 +14,7 @@ export default function BottomNav() {
     return (<NavWrapper>
 
             <NavItem
-                active={isActive('/field')}
+                $active={isActive('/field')}
                 onClick={() => navigate('/field')}
             >
                 <GiGolfFlag size={30}/>
@@ -28,7 +28,7 @@ export default function BottomNav() {
             </HomeButton>
 
             <NavItem
-                active={isActive('/screen')}
+                $active={isActive('/screen')}
                 onClick={() => navigate('/screen')}
             >
                 <MdOutlineMonitor size={30}/>
@@ -72,12 +72,12 @@ const NavItem = styled.div`
 
     cursor: pointer;
 
-    color: ${({active}) => (active ? '#FD5A1E' : '#aaa')};
+    color: ${({$active}) => ($active ? '#FD5A1E' : '#aaa')};
 
     transition: all 0.2s ease;
 
     svg {
-        transform: ${({active}) => (active ? 'scale(1.2)' : 'scale(1)')};
+        transform: ${({$active}) => ($active ? 'scale(1.2)' : 'scale(1)')};
         transition: transform 0.2s ease;
     }
 

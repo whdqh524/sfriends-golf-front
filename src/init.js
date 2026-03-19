@@ -1,4 +1,5 @@
 import axios from "axios"
+import Cookies from "js-cookie";
 import {toast} from "react-toastify";
 import {getLoadingStore} from "./stores/loadingStore";
 
@@ -8,10 +9,13 @@ const DELAY = 500;
 const initializeApp = () => {
 
     // Setting base URL for all API request via axios
-    axios.defaults.baseURL = import.meta.env.VITE_REACT_APP_BASE_URL
+    axios.defaults.baseURL = import.meta.env.VITE_API_SERVER_URL
     axios.interceptors.request.use(function (config, custom) {
-        // UPDATE: Add this code to show global loading indicator
-        // console.log(config)
+        let token = Cookies.get("FRIENDS_GOLF_COOKIE");
+        if (!token) {
+            token = localStorage.getItem("accessToken");
+            config.headers["authorization"] = token;
+        }
         if (config.headers?.skipInterceptor) {
             // Interceptor를 우회
             return config;
@@ -35,7 +39,7 @@ const initializeApp = () => {
         }
         return response;
     }, function (error) {
-        if(error.config) {
+        if (error.config) {
             getLoadingStore().setLoadingState(false);
             if (delayTimer) {
                 clearTimeout(delayTimer);
@@ -53,9 +57,6 @@ const initializeApp = () => {
         toast(errorData.message);
         return Promise.reject(errorData);
     });
-    if (!import.meta.env.MODE || import.meta.env.MODE === 'development') {
-        axios.defaults.baseURL = import.meta.env.VITE_DEV_SERVER_URL
-    }
 }
 
 export default initializeApp

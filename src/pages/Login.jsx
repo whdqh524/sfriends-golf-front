@@ -5,11 +5,11 @@ import styled from "styled-components";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {observer} from "mobx-react";
 import {useUserStore} from "../stores/userStore";
-import {ToastContainer} from "react-toastify";
+import {toast, ToastContainer} from "react-toastify";
+import {formatPhoneNumber} from "@/utils/inputUtil.js";
 
 
 const Login = observer(() => {
@@ -17,26 +17,23 @@ const Login = observer(() => {
 
     const userStore = useUserStore();
 
-    const [id, setId] = useState("");
+    const [cellphone, setCellphone] = useState("");
     const [password, setPassword] = useState("");
     let [typeChange, setTypeChange] = useState("password");
 
-    const onChangeId = (e) => {
-        setId(e.target.value);
+    const onChangeCellphone = (e) => {
+        const inputData = formatPhoneNumber(e.target.value);
+        setCellphone(inputData);
     };
     const onChangePassword = (e) => {
         setPassword(e.target.value);
     };
     const onClickSubmit = async () => {
         try {
-            let postIdPw = {
-                userId: id,
-                password: password
-            };
-            await axios.post("/users/signIn", postIdPw);
+            await userStore.signIn(cellphone, password);
             navigate("/")
         } catch (e) {
-            console.log(e);
+            toast(e.message);
         }
     };
     const logChkPress = async (e) => {
@@ -53,7 +50,7 @@ const Login = observer(() => {
                     id={"login_id"}
                     label={"아이디"}
                     placeholder={"아이디를 입력해 주세요."}
-                    onChange={onChangeId}
+                    onChange={onChangeCellphone}
                     onKeyDown={logChkPress}
                 />
                 <CustomInput

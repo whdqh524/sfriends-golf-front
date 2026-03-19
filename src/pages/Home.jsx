@@ -2,23 +2,29 @@ import styled from 'styled-components';
 import Button from "@/components/Button";
 import CardSection from "@/components/CardSection";
 import {theme} from "@/styles/theme";
-import React from "react";
+import React, {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import {observer} from "mobx-react";
 import {useUserStore} from "../stores/userStore.js";
+import moment from "moment";
 
 const Home = observer(() => {
     const [tab, setTab] = useState('field')
     const navigate = useNavigate()
     const userStore = useUserStore();
 
-    const fieldRounds = [{name: '한양CC', score: 82}, {name: '남서울CC', score: 79},]
+    useEffect(() => {
+        userStore.getCurrentRecord().then(() => {
+            clickTab('field');
+        });
+    }, []);
 
-    const screenRounds = [{name: '골프존 판교', score: 76}, {name: '카카오VX', score: 74},]
-
-    const rounds = tab === 'field' ? fieldRounds : screenRounds
+    const clickTab = (value) => {
+        setTab(value);
+        userStore.setShowRecord(value);
+    }
 
     return (<Container>
 
@@ -27,8 +33,9 @@ const Home = observer(() => {
             <ProfileRow>
                 <Avatar/>
                 <UserInfo>
-                    <Name>홍길동</Name>
+                    <Name>{userStore.me?.name}</Name>
                 </UserInfo>
+                <UserUpdate onClick={()=>{}}>정보수정</UserUpdate>
             </ProfileRow>
         </CardSection>
 
@@ -37,14 +44,14 @@ const Home = observer(() => {
             <HandicapRow>
                 <Stat>
                     <Label>필드 핸디</Label>
-                    <Value color="#2e7d32">12.3</Value>
+                    <Value color="#2e7d32">{userStore.me?.fieldHandy}</Value>
                 </Stat>
 
                 <Divider/>
 
                 <Stat>
                     <Label>스크린 핸디</Label>
-                    <Value color="#1565c0">8.7</Value>
+                    <Value color="#1565c0">{userStore.me?.screenHandy}</Value>
                 </Stat>
             </HandicapRow>
         </CardSection>
@@ -57,19 +64,28 @@ const Home = observer(() => {
             </MoreButton>}
         >
             <TabRow>
-                <Tab active={tab === 'field'} onClick={() => setTab('field')}>
+                <Tab $active={tab === 'field'} onClick={() => clickTab('field')}>
                     필드
                 </Tab>
-                <Tab active={tab === 'screen'} onClick={() => setTab('screen')}>
+                <Tab $active={tab === 'screen'} onClick={() => clickTab('screen')}>
                     스크린
                 </Tab>
             </TabRow>
             <RoundList>
-                {rounds.map((round, idx) => (<RoundItem key={idx}>
-                        <div>{round.name}</div>
-                        <Score>{round.score}</Score>
-                    </RoundItem>))}
-
+                {/*{*/}
+                {/*    tab === 'field' ? userStore.fieldRecords.map((round, idx) => (<RoundItem key={idx}>*/}
+                {/*    <div>{round.name}</div>*/}
+                {/*    <Score>{round.score}</Score>*/}
+                {/*</RoundItem>)) : userStore.screenRecords.map((round, idx) => (<RoundItem key={idx}>*/}
+                {/*    <div>{round.name}</div>*/}
+                {/*    <Score>{round.score}</Score>*/}
+                {/*</RoundItem>))}*/}
+                {
+                    userStore.showRecords?.map((round, idx) => (<RoundItem key={idx}>
+                        <div><span>{round.golf.name}</span>  ({moment(round.date).format('YYYY-MM-DD')})</div>
+                        <Score>{round.strokeRecords.find(data => data.userId === userStore.me?.id).score}</Score>
+                    </RoundItem>))
+                }
                 <MoreRow onClick={() => navigate(`/${tab}`)}>
                     더보기 →
                 </MoreRow>
@@ -79,8 +95,8 @@ const Home = observer(() => {
         {/* 액션 */}
         <CardSection>
             <ActionRow>
-                <ActionButton primary>라운드 추가</ActionButton>
-                <ActionButton>기록 보기</ActionButton>
+                <ActionButton $primary={"true"}>필드 라운딩</ActionButton>
+                <ActionButton>스크린 라운딩</ActionButton>
             </ActionRow>
         </CardSection>
 
@@ -117,9 +133,14 @@ const Avatar = styled.div`
 `
 
 const UserInfo = styled.div``
+const UserUpdate = styled.div`
+    text-decoration-line: underline;
+    font-size: 14px;
+    margin-left: auto;
+`
 
 const Name = styled.div`
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
 `
 
@@ -164,6 +185,10 @@ const RoundItem = styled.div`
     display: flex;
     justify-content: space-between;
     font-size: 14px;
+    
+    span {
+        font-weight: 500;
+    }
 `
 
 const Score = styled.div`
@@ -186,8 +211,8 @@ const ActionButton = styled.button`
     font-weight: 600;
     cursor: pointer;
 
-    background: ${({primary}) => (primary ? '#FD5A1E' : '#eee')};
-    color: ${({primary}) => (primary ? '#fff' : '#333')};
+    background: ${({$primary}) => ($primary ? '#FD5A1E' : '#eee')};
+    color: ${({$primary}) => ($primary ? '#fff' : '#333')};
 
     &:active {
         transform: scale(0.96);
@@ -206,8 +231,8 @@ const Tab = styled.div`
 
     cursor: pointer;
 
-    background: ${({active}) => (active ? '#FD5A1E' : '#eee')};
-    color: ${({active}) => (active ? '#fff' : '#666')};
+    background: ${({$active}) => ($active ? '#FD5A1E' : '#eee')};
+    color: ${({$active}) => ($active ? '#fff' : '#666')};
 
     transition: 0.2s;
 

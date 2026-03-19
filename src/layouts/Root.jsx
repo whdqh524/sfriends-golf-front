@@ -1,16 +1,20 @@
 import styled from "styled-components";
 import {useState, useEffect} from 'react';
 
-import {Outlet} from "react-router-dom";
+import {Outlet, useNavigate} from "react-router-dom";
 import SideNav from "@/components/SideNav";
 import BottomNav from "@/components/BottomNav";
 import Toast from "@/components/Toast";
 import ModalManager from "@/components/Modal/ModalManager";
 import Loading from "../components/Loading.jsx";
 import {Suspense} from "react";
+import {useUserStore} from "@/stores/userStore.js";
 
 
 const Root = () => {
+    const userStore = useUserStore();
+    const navigate = useNavigate();
+
     const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
@@ -20,7 +24,13 @@ const Root = () => {
 
         handleResize()
         window.addEventListener('resize', handleResize)
+        if(!userStore.isLogin) {
+            userStore.signInWithToken().catch(() => {
+                navigate("/login");
+            });
 
+
+        }
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
