@@ -1,0 +1,50 @@
+import { makeAutoObservable } from "mobx";
+import { getStore,useStore } from "./index.js";
+
+export class ModalStore {
+    modals = [];
+
+    constructor() {
+        makeAutoObservable(this, {}, { autoBind: true });
+    }
+
+    open(payload = {}) {
+        const { id, component, props = {} } = payload;
+
+        if (!component) {
+            return null;
+        }
+
+        const { type, ...modalProps } = props;
+
+        const modalData = {
+            id: id ?? `modal-${crypto.randomUUID()}`,
+            type,
+            component,
+            props: modalProps,
+        };
+
+        this.modals.push(modalData);
+        return modalData.id;
+    }
+
+    closeById(id) {
+        this.modals = this.modals.filter((modal) => modal.id !== id);
+    }
+
+    close() {
+        this.modals.pop();
+    }
+
+    closeAll() {
+        this.modals = [];
+    }
+}
+
+export const useModalStore = () => {
+    return useStore().modalStore;
+};
+
+export const getModalStore = () => {
+    return getStore().modalStore;
+}

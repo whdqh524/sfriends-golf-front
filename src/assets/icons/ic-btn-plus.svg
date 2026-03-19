@@ -1,0 +1,18 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g id="ico/16/plus">
+        <g clip-path="url(#clip0_76_48043)">
+            <circle id="Ellipse 330" cx="7.99967" cy="8.00016" r="6.66667" stroke="#ffffff"/>
+            <g id="plus">
+                <path id="Path 2" d="M10.6663 7.99984H5.33301" stroke="#ffffff" stroke-width="1.2"
+                      stroke-linecap="round"/>
+                <path id="Path 2_2" d="M8.00033 5.3335V10.6668" stroke="#ffffff" stroke-width="1.2"
+                      stroke-linecap="round"/>
+            </g>
+        </g>
+    </g>
+    <defs>
+        <clipPath id="clip0_76_48043">
+            <rect width="16" height="16" rx="8" fill="white"/>
+        </clipPath>
+    </defs>
+</svg>
