@@ -85,7 +85,7 @@ export const Hole = styled.div`
     align-items: center;
     justify-content: center;
 
-    padding: 6px 2px;
+    padding: 6px 0px;
     border-radius: 6px;
     background: #f8f8f8;
 
