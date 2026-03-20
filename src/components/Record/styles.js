@@ -105,7 +105,7 @@ export const Par = styled.div`
 export const Stroke = styled.div`
     font-size: 14px;
     font-weight: 700;
-    color: ${({ color }) => color};
+    color: ${({ $color }) => $color};
 `
 
 export const Money = styled.div`

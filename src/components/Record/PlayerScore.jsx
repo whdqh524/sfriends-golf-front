@@ -61,11 +61,11 @@ export default function PlayerScore({ stroke, money, item }) {
                             <HoleNum>{idx + 1}</HoleNum>
                             <Par>PAR {hole.par}</Par>
 
-                            <Stroke color={getScoreColor(data.stroke, hole.par)}>
+                            <Stroke $color={getScoreColor(data.stroke, hole.par)}>
                                 {data.stroke}
                             </Stroke>
 
-                            <Money positive={data.money > 0}>
+                            <Money $positive={data.money > 0}>
                                 {data.money}
                             </Money>
                         </Hole>
@@ -77,7 +77,7 @@ export default function PlayerScore({ stroke, money, item }) {
                 <SumBox>
                     <div>OUT</div>
                     <b>{summary.frontScore}</b>
-                    <Money positive={summary.frontMoney > 0}>
+                    <Money $positive={summary.frontMoney > 0}>
                         {summary.frontMoney}
                     </Money>
                 </SumBox>
@@ -85,7 +85,7 @@ export default function PlayerScore({ stroke, money, item }) {
                 <SumBox>
                     <div>IN</div>
                     <b>{summary.backScore}</b>
-                    <Money positive={summary.backMoney > 0}>
+                    <Money $positive={summary.backMoney > 0}>
                         {summary.backMoney}
                     </Money>
                 </SumBox>
