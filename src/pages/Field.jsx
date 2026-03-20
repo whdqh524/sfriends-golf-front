@@ -1,14 +1,15 @@
-import Button from "@/components/Button";
-import CardSection from "@/components/CardSection";
-import { theme } from "@/styles/theme";
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {useEffect} from "react";
+import RecordPage from "./RecordPage.jsx";
+import {useRecordStore} from "../stores/recordStore.js";
 
 const Field = () => {
+    // const recordStore = useRecordStore()
+    // useEffect(() => {
+    //     recordStore.clear();
+    //     return () => recordStore.clear();
+    // })
     return (
-        <>
-            <CardSection></CardSection>
-        </>
+        <RecordPage type={'FIELD'}/>
     );
 };
 

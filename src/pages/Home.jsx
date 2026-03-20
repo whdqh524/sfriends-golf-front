@@ -11,13 +11,13 @@ import {useUserStore} from "../stores/userStore.js";
 import moment from "moment";
 
 const Home = observer(() => {
-    const [tab, setTab] = useState('field')
+    const [tab, setTab] = useState('FIELD')
     const navigate = useNavigate()
     const userStore = useUserStore();
 
     useEffect(() => {
         userStore.getCurrentRecord().then(() => {
-            clickTab('field');
+            clickTab('FIELD');
         });
     }, []);
 
@@ -64,22 +64,14 @@ const Home = observer(() => {
             </MoreButton>}
         >
             <TabRow>
-                <Tab $active={tab === 'field'} onClick={() => clickTab('field')}>
+                <Tab $active={tab === 'FIELD'} onClick={() => clickTab('FIELD')}>
                     필드
                 </Tab>
-                <Tab $active={tab === 'screen'} onClick={() => clickTab('screen')}>
+                <Tab $active={tab === 'SCREEN'} onClick={() => clickTab('SCREEN')}>
                     스크린
                 </Tab>
             </TabRow>
             <RoundList>
-                {/*{*/}
-                {/*    tab === 'field' ? userStore.fieldRecords.map((round, idx) => (<RoundItem key={idx}>*/}
-                {/*    <div>{round.name}</div>*/}
-                {/*    <Score>{round.score}</Score>*/}
-                {/*</RoundItem>)) : userStore.screenRecords.map((round, idx) => (<RoundItem key={idx}>*/}
-                {/*    <div>{round.name}</div>*/}
-                {/*    <Score>{round.score}</Score>*/}
-                {/*</RoundItem>))}*/}
                 {
                     userStore.showRecords?.map((round, idx) => (<RoundItem key={idx}>
                         <div><span>{round.golf.name}</span>  ({moment(round.date).format('YYYY-MM-DD')})</div>

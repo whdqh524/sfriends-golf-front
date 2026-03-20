@@ -1,13 +1,12 @@
-// stores/authStore.ts
 import { makeAutoObservable } from 'mobx'
 import axios from 'axios'
 import {getStore, useStore} from "./index.js";
 
 export class RoundStore {
-    currentRound = null
-    currentHole = 0
-    strokeRecords = [];
-    moneyRecords = [];
+    records = [];
+    offset = 0;
+    limit = 10;
+    totalCount = 0;
 
     constructor() {
         makeAutoObservable(this)

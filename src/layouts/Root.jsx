@@ -52,12 +52,14 @@ const Root = () => {
 
 export const RootContainer = styled.div`
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
+    overflow-y: auto;   // 🔥 추가
 `;
 
 export const MainContent = styled.div`
     padding: 20px;
     flex: 1;
+    overflow-y: auto;
 `;
 
 

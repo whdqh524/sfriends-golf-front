@@ -4,6 +4,7 @@ import { UserStore } from "./userStore";
 import { RoundStore } from "./roundStore";
 import { LoadingStore } from "./loadingStore";
 import { GolfStore } from "./golfStore.js";
+import { RecordStore } from "./recordStore.js";
 
 export const StoreContext = createContext(null);
 
@@ -12,6 +13,7 @@ export class Store {
     userStore;
     golfStore;
     roundStore;
+    recordStore;
     loadingStore;
 
     constructor() {
@@ -20,6 +22,7 @@ export class Store {
         this.golfStore = new GolfStore(this);
         this.roundStore = new RoundStore(this);
         this.loadingStore = new LoadingStore(this);
+        this.recordStore = new RecordStore(this);
     }
 }
 

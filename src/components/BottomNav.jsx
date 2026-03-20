@@ -4,19 +4,23 @@ import { MdOutlineMonitor } from 'react-icons/md'
 import {FaMapMarkedAlt, FaDesktop} from 'react-icons/fa'
 import {useLocation, useNavigate} from 'react-router-dom'
 import { MdDashboard } from 'react-icons/md'
+import {useRecordStore} from "../stores/recordStore.js";
 
 export default function BottomNav() {
     const navigate = useNavigate()
     const location = useLocation()
-
+    const recordStore = useRecordStore();
     const isActive = (path) => location.pathname === path
 
     return (<NavWrapper>
 
             <NavItem
                 $active={isActive('/field')}
-                onClick={() => navigate('/field')}
-            >
+                onClick={() => {
+                    recordStore.clear();
+                    navigate('/field')}
+                }
+                >
                 <GiGolfFlag size={30}/>
                 <span>필드</span>
             </NavItem>
@@ -29,7 +33,10 @@ export default function BottomNav() {
 
             <NavItem
                 $active={isActive('/screen')}
-                onClick={() => navigate('/screen')}
+                onClick={() => {
+                    recordStore.clear();
+                    navigate('/screen')}
+                }
             >
                 <MdOutlineMonitor size={30}/>
                 <span>스크린</span>

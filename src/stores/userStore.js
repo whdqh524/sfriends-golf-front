@@ -51,7 +51,7 @@ export class UserStore {
     }
 
     async getCurrentRecord() {
-        const recordResponse = await axios.get('/round/me');
+        const recordResponse = await axios.get('/round/current');
         this.fieldRecords = recordResponse.data.data.field.records;
         this.fieldCount = recordResponse.data.data.field.count;
         this.screenRecords = recordResponse.data.data.screen.records;
@@ -59,7 +59,7 @@ export class UserStore {
     }
 
     setShowRecord(tab) {
-        if(tab === 'field') {
+        if(tab === 'FIELD') {
             this.showRecords = this.fieldRecords;
         } else {
             this.showRecords = this.screenRecords;
