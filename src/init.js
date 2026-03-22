@@ -48,7 +48,7 @@ const initializeApp = () => {
         }
         let errorData = {code: error.code, message: error.message};
         if (error.response.status === 400) {
-            errorData = {code: error.response.data.error.code, message: error.response.data.error.message};
+            errorData = {code: error.code, message: error.response.data.error};
             if (['AUTH_TOKEN_EXPIRED', 'NOT_EXIST_AUTH_TOKEN'].includes(errorData.code)) {
                 localStorage.removeItem("token")
                 window.location.href = "/login"

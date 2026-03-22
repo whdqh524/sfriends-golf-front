@@ -1,196 +1,129 @@
 import styled from "styled-components";
+import {theme} from "@/styles/theme.js";
 
-const BUTTON_STYLES = {
-    disable: {
-        bgColor: {
-            fill: "var(--disabled-bg-colored, #F5F5F5)",
-            outline: "var(--disabled-bg-no-color, #FAFAFA)",
-        },
-        borderColor: {
-            fill: "#F5F5F5",
-            outline: "#C8C8C8",
-        },
-    },
-    xs: {
-        lineHeight: "16px",
-        padding: "0 8px",
-        height: "28px",
-        fontSize: "12px",
-        fontWeight: 400,
-        bgColor: {
-            fill: "#C86733",
-            outline: "#fff",
-        },
-        hoverBgColor: {
-            fill: "#AC4B25",
-            outline: "#fff",
-        },
-        border: {
-            fill: "#C86733",
-            outline: "#C8C8C8",
-        },
-        hoverBorderColor: {
-            fill: "#AC4B25",
-            outline: "#282828",
-        },
-        textColor: {
-            fill: "#fff",
-            outline: "#262626",
-        },
-    },
-    s: {
-        lineHeight: "16px",
-        padding: "0 12px",
-        height: "32px",
-        fontSize: "12px",
-        fontWeight: 400,
-        bgColor: {
-            fill: "#C86733",
-            outline: "#fff",
-        },
-        hoverBgColor: {
-            fill: "#AC4B25",
-            outline: "#fff",
-        },
-        border: {
-            fill: "#C86733",
-            outline: "#C8C8C8",
-        },
-        hoverBorderColor: {
-            fill: "#AC4B25",
-            outline: "#282828",
-        },
-        textColor: {
-            fill: "#fff",
-            outline: "#262626",
-        },
-    },
-    m: {
-        lineHeight: "18px",
-        padding: "0 16px",
-        height: "36px",
-        fontSize: "13px",
-        fontWeight: 400,
-        bgColor: {
-            fill: "#C86733",
-            outline: "#fff",
-        },
-        hoverBgColor: {
-            fill: "#AC4B25",
-            outline: "#fff",
-        },
-        border: {
-            fill: "#C86733",
-            outline: "#C8C8C8",
-        },
-        hoverBorderColor: {
-            fill: "#AC4B25",
-            outline: "#282828",
-        },
-        textColor: {
-            fill: "#fff",
-            outline: "#262626",
-        },
-    },
-    l: {
-        lineHeight: "20px",
-        padding: "0 20px",
-        height: "40px",
-        fontSize: "20px",
-        fontWeight: 500,
-        bgColor: {
-            fill: "#C86733",
-            outline: "#fff",
-        },
-        hoverBgColor: {
-            fill: "#AC4B25",
-            outline: "#fff",
-        },
-        border: {
-            fill: "#C86733",
-            outline: "#C8C8C8",
-        },
-        hoverBorderColor: {
-            fill: "#AC4B25",
-            outline: "#282828",
-        },
-        textColor: {
-            fill: "#fff",
-            outline: "#262626",
-        },
-    },
-    xl: {
-        lineHeight: "20px",
-        padding: "0 24px",
-        height: "44px",
-        fontSize: "14px",
-        fontWeight: 500,
-        bgColor: {
-            fill: "#C86733",
-            outline: "#fff",
-        },
-        hoverBgColor: {
-            fill: "#AC4B25",
-            outline: "#fff",
-        },
-        border: {
-            fill: "#C86733",
-            outline: "#C8C8C8",
-        },
-        hoverBorderColor: {
-            fill: "#AC4B25",
-            outline: "#282828",
-        },
-        textColor: {
-            fill: "#fff",
-            outline: "#262626",
-        },
-    },
+const SIZE_MAP = {
+    xsm: { height: 28, padding: "0 10px", fontSize: 12 },
+    sm: { height: 32, padding: "0 20px", fontSize: 14 },
+    md: { height: 40, padding: "0 32px", fontSize: 15, fontWeight: 700 },
+    lg: { height: 48, padding: "0 40px", fontSize: 16, fontWeight: 700 },
 };
 
-const Button = ({ type, size, text, onClickFunc, className }) => {
+const RADIUS_MAP = {
+    sm: 4,
+    md: 8,
+    lg: 12,
+};
+
+const Button = ({
+                    children,
+                    size = "md",
+                    radius = "md",
+                    color = theme.colors.primary.main,
+                    bgColor = theme.colors.primary.main,
+                    outlined = false,
+                    fullWidth = false,
+                    disabled = false,
+                    gap = 10,
+                    ...props
+                }) => {
     return (
         <StyledButton
-            onClick={onClickFunc}
-            $type={type}
+            type="button"
             $size={size}
-            className={className}
-        >
-            {text}
+            $radius={radius}
+            $outlined={outlined}
+            $color={color}
+            $bgColor={bgColor}
+            $fullWidth={fullWidth}
+            $gap={gap}
+            disabled={disabled}
+            {...props}>
+            {children}
         </StyledButton>
     );
 };
 
+export default Button;
+
+
 const StyledButton = styled.button`
-    //width: 100%;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    padding: ${(props) => BUTTON_STYLES[props.$size].padding};
-    height: ${(props) => BUTTON_STYLES[props.$size].height};
-    font-size: ${(props) => BUTTON_STYLES[props.$size].fontSize};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: ${({ $gap }) => `${$gap}px`};
+
+    width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
+
+    ${({ $size, $height }) => {
+        const h = $height || SIZE_MAP[$size].height;
+        return `height: ${h}px;line-height: ${h}px;`;
+    }}
+
+    padding: ${({ $padding, $size }) => $padding || SIZE_MAP[$size].padding};
+
+    font-size: ${({ $fontSize, $size }) => ($fontSize ? `${$fontSize}px` : `${SIZE_MAP[$size].fontSize}px`)};
+
+    font-weight: ${({ $fontWeight, $size }) => $fontWeight || SIZE_MAP[$size].fontWeight};
+
+    border-radius: ${({ $radius, $size, $height }) => {
+        const h = $height || SIZE_MAP[$size].height;
+
+        if ($radius === "half") return `${h / 2}px`;
+        if ($radius === "pill") return "9999px";
+        if (typeof $radius === "number") return `${$radius}px`;
+
+        return `${RADIUS_MAP[$radius]}px`;
+    }};
+
     border: 1px solid
-        ${(props) => BUTTON_STYLES[props.$size].border[props.$type]};
-    background-color: ${(props) =>
-    BUTTON_STYLES[props.$size].bgColor[props.$type]};
-    border-radius: 4px;
-    line-height: ${(props) => BUTTON_STYLES[props.$size].lineHeight};
-    font-weight: ${(props) => BUTTON_STYLES[props.$size].fontWeight};
-    color: ${(props) => BUTTON_STYLES[props.$size].textColor[props.$type]};
+    ${({ $outlined, disabled, $color }) => {
+        if (disabled && $outlined) return theme.colors.gray[300];
+        if ($outlined) return $color;
+        return "transparent";
+    }};
 
-    &:not(:disabled) {
-        &:hover {
-            background-color: ${(props) =>
-    BUTTON_STYLES[props.$size].hoverBgColor[props.$type]};
-            border-color: ${(props) =>
-    BUTTON_STYLES[props.$size].hoverBorderColor[props.$type]};
-        }
-    }
+    background-color: ${({ $outlined, disabled, $bgColor }) => {
+        if (disabled) return theme.colors.gray[100];
+        if (!$outlined) return $bgColor;
+        return "transparent";
+    }};
 
-    &:disabled {
-        cursor: not-allowed;
-        background-color: ${(props) =>
-    BUTTON_STYLES.disable.bgColor[props.$type]};
+    color: ${({ $outlined, disabled, $color }) => {
+        if (disabled) return theme.colors.gray[500];
+        if (!$outlined) return theme.colors.gray.white;
+        return $color;
+    }};
+
+    cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
+
+    transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            color 0.2s ease;
+
+    &:hover {
+        ${({ disabled, $outlined, $bgColor, $color }) => {
+            if (disabled) return "";
+
+            // Filled 버튼
+            if (!$outlined && $bgColor) {
+                return `
+          background-color: ${theme.colors.gray.white};
+          color: ${$bgColor};
+          border: 1px solid ${$bgColor};
+        `;
+            }
+
+            // Outlined 버튼
+            if ($outlined) {
+                return `
+          background-color: ${$color};
+          color: ${theme.colors.gray.white};
+          border-color: ${$color};
+        `;
+            }
+
+            return "";
+        }}
     }
 `;
-
-export default Button;

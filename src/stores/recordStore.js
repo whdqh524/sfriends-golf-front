@@ -7,7 +7,7 @@ export class RecordStore {
     offset = 0;
     limit = 10;
     totalCount = 0;
-    selectedTab = 'ALL';
+    selectedTab = 'MY';
     loading = false;
     hasMore = true;
     type = 'FIELD';
@@ -22,7 +22,6 @@ export class RecordStore {
         this.offset = 0;
         this.limit = 10;
         this.totalCount = 0;
-        this.selectedTab = 'ALL';
         this.hasMore = true;
     }
     async getList(type) {

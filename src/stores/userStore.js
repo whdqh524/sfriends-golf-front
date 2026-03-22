@@ -22,10 +22,23 @@ export class UserStore {
     screenRecords = [];
     screenCount = 0;
     showRecords = [];
+    updateModal = {password:"", newPassword:"", confirmPassword:""}
     rounding = undefined;
 
     constructor() {
         makeAutoObservable(this)
+    }
+
+    async clear() {
+        this.me = undefined
+        this.isLogin = false
+        this.fieldRecords = [];
+        this.fieldCount = 0;
+        this.screenRecords = [];
+        this.screenCount = 0;
+        this.showRecords = [];
+        this.rounding = undefined;
+        this.updateModal = {password:"", newPassword:"", confirmPassword:""}
     }
 
     async signIn(cellphone, password) {
@@ -68,10 +81,19 @@ export class UserStore {
 
     logout() {
         Cookies.remove('accessToken')
+        localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken')
 
         this.user = null
         this.isLogin = false
+    }
+
+    async updatePassword() {
+        await axios.patch('/user/updatePassword', {
+            oldPassword: this.updateModal.password,
+            newPassword: this.updateModal.newPassword,
+        });
+        this.updateModal = {password:"", newPassword:"", confirmPassword:""}
     }
 
     async refresh() {
@@ -90,6 +112,18 @@ export class UserStore {
             console.log(err);
             this.logout()
         }
+    }
+
+    setModalPassword(password) {
+        this.updateModal.password = password;
+    }
+
+    setModalNewPassword(password) {
+        this.updateModal.newPassword = password;
+    }
+
+    setModalConfirmPassword(password) {
+        this.updateModal.confirmPassword = password;
     }
 }
 

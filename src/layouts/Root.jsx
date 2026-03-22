@@ -15,33 +15,22 @@ const Root = () => {
     const userStore = useUserStore();
     const navigate = useNavigate();
 
-    const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth <= 1024)
-        }
-
-        handleResize()
-        window.addEventListener('resize', handleResize)
         if(!userStore.isLogin) {
             userStore.signInWithToken().catch(() => {
                 navigate("/login");
             });
-
-
         }
-        return () => window.removeEventListener('resize', handleResize)
     }, [])
 
     return (
         <Suspense fallback={<Loading />}>
             <RootContainer className="layout-container">
-                {!isMobile && <SideNav/>}
-                <MainContent className="page-content" $isMobile={isMobile}>
+                <MainContent className="page-content">
                     <Outlet/>
                 </MainContent>
-                {isMobile && <BottomNav/>}
+                <BottomNav/>
             </RootContainer>
             <ModalManager/>
             <Toast/>

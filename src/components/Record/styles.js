@@ -94,7 +94,8 @@ export const Hole = styled.div`
 
 export const HoleNum = styled.div`
     font-size: 10px;
-    color: #999;
+    color:  ${({ $multiple }) =>
+            $multiple ? '#d32f2f' : '#999'};
 `
 
 export const Par = styled.div`

@@ -8,8 +8,8 @@ const ModalItem = ({ modal, zIndex, closeModal, ...transitionProps }) => {
   const nodeRef = useRef(null);
   const [actionData, setActionData] = useState();
 
-  const runAndClose = (action) => {
-    const shouldClose = action?.(actionData);
+  const runAndClose = async (action) => {
+    const shouldClose = await action?.(actionData);
     if (shouldClose === false) return;
     closeModal?.();
   };

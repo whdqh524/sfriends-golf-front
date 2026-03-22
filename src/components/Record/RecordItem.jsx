@@ -10,13 +10,14 @@ import {
     Detail
 } from './styles'
 import PlayerScore from "./PlayerScore.jsx";
+import {useUserStore} from "@/stores/userStore.js";
 
 export default function RecordItem({ item }) {
     const [open, setOpen] = useState(false)
-    const recordStore = useRecordStore()
-
+    const recordStore = useRecordStore();
+    const userStore = useUserStore();
     const myScore = item.strokeRecords?.find(
-        v => v.userId === recordStore.myUserId
+        v => v.userId === userStore.me.id
     )
 
     return (

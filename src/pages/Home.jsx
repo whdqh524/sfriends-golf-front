@@ -1,20 +1,21 @@
 import styled from 'styled-components';
-import Button from "@/components/Button";
 import CardSection from "@/components/CardSection";
-import {theme} from "@/styles/theme";
 import React, {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {Link} from "react-router-dom";
 import {observer} from "mobx-react";
 import {useUserStore} from "../stores/userStore.js";
 import moment from "moment";
+import {useModalStore} from "@/stores/modalStore.js";
+import {CONFIRM_PAYLOAD, MODAL_PAYLOAD} from "@/constants/modal.js";
+import UpdatePasswordModal from "@/components/Modal/UpdatePasswordModal.jsx";
+import AlertModal from "@/components/Modal/AlertModal.jsx";
 
 const Home = observer(() => {
     const [tab, setTab] = useState('FIELD')
     const navigate = useNavigate()
     const userStore = useUserStore();
-
+    const modalStore = useModalStore();
     useEffect(() => {
         userStore.getCurrentRecord().then(() => {
             clickTab('FIELD');
@@ -35,7 +36,38 @@ const Home = observer(() => {
                 <UserInfo>
                     <Name>{userStore.me?.name}</Name>
                 </UserInfo>
-                <UserUpdate onClick={()=>{}}>정보수정</UserUpdate>
+                <UpdatePassword onClick={()=>{
+                    modalStore.open(MODAL_PAYLOAD.UPDATE_USER_MODAL({
+                        component: UpdatePasswordModal,
+                        props: {
+                            data: { step: 1 },
+                            onConfirm: async () => {
+                                if (userStore.updateModal.newPassword !== userStore.updateModal.confirmPassword) {
+                                    modalStore.open(MODAL_PAYLOAD.ALERT_MODAL({
+                                        component: AlertModal,
+                                        props: {
+                                            message: `비밀번호 확인이 일치하지 않습니다.`,
+                                        },
+                                    }))
+                                    return false;
+                                }
+                                try {
+                                    await userStore.updatePassword();
+                                } catch (e) {
+                                    console.error(e.message);
+                                    const errorMessage = e.response.data.code === 400 ? 'a' : 'b';
+                                    modalStore.open(MODAL_PAYLOAD.ALERT_MODAL({
+                                        component: AlertModal,
+                                        props: {
+                                            message: errorMessage,
+                                        },
+                                    }))
+                                }
+
+                            }
+                        },
+                    }),)
+                }}>비밀번호 변경</UpdatePassword>
             </ProfileRow>
         </CardSection>
 
@@ -125,7 +157,7 @@ const Avatar = styled.div`
 `
 
 const UserInfo = styled.div``
-const UserUpdate = styled.div`
+const UpdatePassword = styled.div`
     text-decoration-line: underline;
     font-size: 14px;
     margin-left: auto;

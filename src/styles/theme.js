@@ -11,6 +11,7 @@ const palette = {
     gray100: "#EFF1FA",
     white: "#FFFFFF",
     red500: "#FF0038",
+    red300: "#FD5A1E",
 
     // layout
     layoutDark: "#2c2f42",
@@ -22,7 +23,7 @@ export const theme = {
         palette,
 
         primary: {
-            main: palette.blue500,
+            main: palette.red300,
         },
 
         gray: {

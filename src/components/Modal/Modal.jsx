@@ -28,11 +28,11 @@ const Modal = ({
         <ModalBody>{renderedContent}</ModalBody>
         <ModalFooter>
           {isConfirmModal && (
-            <Button outlined color={theme.colors.palette.gray800} onClick={onCancel}>
+            <Button outlined $bgColor={'#FD5A1E'} onClick={onCancel}>
               {cancelText}
             </Button>
           )}
-          <Button onClick={onConfirm}>{confirmText}</Button>
+          <Button $bgColor={'#FD5A1E'} onClick={onConfirm}>{confirmText}</Button>
         </ModalFooter>
       </ModalPanel>
     </Dim>

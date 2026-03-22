@@ -76,8 +76,8 @@ const Container = styled.div`
   flex-direction: column;
   gap: 12px;
 
-  @media (min-width: 768px) {
-    max-width: 700px;
+  @media (min-width: 10248px) {
+    max-width: 800px;
     margin: 0 auto;
   }
 `

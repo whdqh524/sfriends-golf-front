@@ -18,10 +18,10 @@ export default function PlayerScore({ stroke, money, item }) {
         ...item.backCourse.holes
     ]
 
-    const getScoreColor = (stroke, par) => {
+    const getScoreColor = (stroke) => {
         if (stroke === 0) return '#ccc'
-        if (stroke < par) return '#1565c0'
-        if (stroke > par) return '#d32f2f'
+        if (stroke < 0) return '#1565c0'
+        if (stroke > 0) return '#d32f2f'
         return '#000'
     }
 
@@ -45,6 +45,8 @@ export default function PlayerScore({ stroke, money, item }) {
         totalMoney: sum(holeData, 'money'),
     }
 
+    const doubleHole = Array.from(item.doubleHole)
+
     return (
         <PlayerRow>
 
@@ -58,10 +60,10 @@ export default function PlayerScore({ stroke, money, item }) {
 
                     return (
                         <Hole key={idx}>
-                            <HoleNum>{idx + 1}</HoleNum>
+                            <HoleNum $multiple={item.doubleHole.includes(idx+1)}>{idx + 1}</HoleNum>
                             <Par>PAR {hole.par}</Par>
 
-                            <Stroke $color={getScoreColor(data.stroke, hole.par)}>
+                            <Stroke $color={getScoreColor(data.stroke)}>
                                 {data.stroke}
                             </Stroke>
 
@@ -90,7 +92,7 @@ export default function PlayerScore({ stroke, money, item }) {
                     </Money>
                 </SumBox>
 
-                <SumBox $highlight={true}>
+                <SumBox>
                     <div>TOTAL</div>
                     <b>{summary.totalScore}</b>
                     <Money $positive={summary.totalMoney > 0}>

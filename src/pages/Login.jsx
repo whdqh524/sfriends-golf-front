@@ -29,12 +29,8 @@ const Login = observer(() => {
         setPassword(e.target.value);
     };
     const onClickSubmit = async () => {
-        try {
-            await userStore.signIn(cellphone, password);
-            navigate("/")
-        } catch (e) {
-            toast(e.message);
-        }
+        await userStore.signIn(cellphone, password);
+        navigate("/")
     };
     const logChkPress = async (e) => {
         if (e.key === "Enter") {
@@ -66,11 +62,8 @@ const Login = observer(() => {
                 />
                 <ButtonWrap>
                     <Button
-                        type={"fill"}
-                        size={"xl"}
-                        text={"로그인"}
-                        onClickFunc={onClickSubmit}
-                    />
+                        onClick={onClickSubmit}
+                    >로그인</Button>
                 </ButtonWrap>
 
                 {/*<p className={"page-error-text" + (logVal ? ' on' : '')}>*/}
