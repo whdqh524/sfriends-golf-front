@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { useEffect, useRef, useState } from 'react'
 import RecordItem from './RecordItem'
-import {useRecordStore} from "../../stores/recordStore.js";
+import {useRecordStore} from "@/stores/recordStore.js";
 import {observer} from "mobx-react";
 
 export default observer(({ type }) => {

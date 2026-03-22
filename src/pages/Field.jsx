@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import RecordPage from "./RecordPage.jsx";
-import {useRecordStore} from "../stores/recordStore.js";
+import {useRecordStore} from "@/stores/recordStore.js";
 
 const Field = () => {
     // const recordStore = useRecordStore()

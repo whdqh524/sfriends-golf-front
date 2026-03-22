@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import LogoText from "../assets/logo-text.svg";
+import LogoText from "@/assets/logo-text.svg";
 import styled from "styled-components";
 
-import Input from "../components/Input";
-import Button from "../components/Button";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 
 import {useNavigate} from "react-router-dom";
 import {observer} from "mobx-react";
-import {useUserStore} from "../stores/userStore";
+import {useUserStore} from "@/stores/userStore";
 import {toast, ToastContainer} from "react-toastify";
 import {formatPhoneNumber} from "@/utils/inputUtil.js";
 

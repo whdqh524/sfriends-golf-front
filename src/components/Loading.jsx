@@ -1,7 +1,7 @@
 import React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
-import {useLoadingStore} from "../stores/loadingStore.js";
+import {useLoadingStore} from "@/stores/loadingStore.js";
 import IcLoading from "@/assets/icons/loading-gif-ico.gif";
 
 const Loading = observer(() => {

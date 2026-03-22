@@ -6,7 +6,7 @@ import SideNav from "@/components/SideNav";
 import BottomNav from "@/components/BottomNav";
 import Toast from "@/components/Toast";
 import ModalManager from "@/components/Modal/ModalManager";
-import Loading from "../components/Loading.jsx";
+import Loading from "@/components/Loading.jsx";
 import {Suspense} from "react";
 import {useUserStore} from "@/stores/userStore.js";
 

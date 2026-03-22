@@ -4,7 +4,7 @@ import { MdOutlineMonitor } from 'react-icons/md'
 import {FaMapMarkedAlt, FaDesktop} from 'react-icons/fa'
 import {useLocation, useNavigate} from 'react-router-dom'
 import { MdDashboard } from 'react-icons/md'
-import {useRecordStore} from "../stores/recordStore.js";
+import {useRecordStore} from "@/stores/recordStore.js";
 
 export default function BottomNav() {
     const navigate = useNavigate()

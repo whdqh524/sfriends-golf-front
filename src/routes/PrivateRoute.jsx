@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-import { useStore } from "../stores";
+import { useStore } from "@/stores";
 
 const PrivateRoute = observer(({ children }) => {
     const { userStore } = useStore();

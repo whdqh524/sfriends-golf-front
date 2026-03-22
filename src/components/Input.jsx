@@ -2,13 +2,13 @@ import React, {useState} from "react";
 import styled from "styled-components";
 
 /** @type {string} */
-import IcInputReset from "../assets/icons/ic-input-rest.svg";
+import IcInputReset from "@/assets/icons/ic-input-rest.svg";
 /** @type {string} */
-import IcEyeOn from "../assets/icons/ic-eye-on.svg";
+import IcEyeOn from "@/assets/icons/ic-eye-on.svg";
 /** @type {string} */
-import IcEyeOff from "../assets/icons/ic-eye-off.svg";
+import IcEyeOff from "@/assets/icons/ic-eye-off.svg";
 /** @type {string} */
-import IcSearch from "../assets/icons/ic-btn-search.svg"
+import IcSearch from "@/assets/icons/ic-btn-search.svg"
 
 const Input = ({
                    label,

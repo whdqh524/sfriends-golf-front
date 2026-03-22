@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {observer} from "mobx-react";
-import {useUserStore} from "../stores/userStore.js";
+import {useUserStore} from "@/stores/userStore.js";
 import moment from "moment";
 import {useModalStore} from "@/stores/modalStore.js";
 import {CONFIRM_PAYLOAD, MODAL_PAYLOAD} from "@/constants/modal.js";
