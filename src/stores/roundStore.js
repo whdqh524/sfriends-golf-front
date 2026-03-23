@@ -52,7 +52,7 @@ export class RoundStore {
 
     async create() {
         const data = {
-            type: this.golfInfo.type, golfId: this.golfInfo.id, frontCourseId: this.golfInfo.frontCourse.id,
+            type: this.golfInfo.type, golfId: this.golfInfo.golf.id, frontCourseId: this.golfInfo.frontCourse.id,
             backCourseId: this.golfInfo.backCourse.id, baseMoney: this.golfInfo.baseMoney, date: moment(this.golfInfo.date).format('YYYY-MM-DD'),
             userIds: this.players.map(player => player.id), writeUserId: getUserStore().me.id
         }
@@ -92,8 +92,7 @@ export class RoundStore {
 
     setGolfInfo(type, golf, frontCourse, backCourse, baseMoney, date) {
         this.golfInfo = {
-            type, id: golf.id, name: golf.name, location: golf.location,
-            frontCourse, backCourse, baseMoney, date
+            type, golf, frontCourse, backCourse, baseMoney, date
         }
 
     }

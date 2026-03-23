@@ -13,30 +13,34 @@ export default observer(({ modifyFunc, handleNext, handleFinish }) => {
 
     return (
         <Card>
-            {/* 🔥 아코디언 */}
-            <ResultTable>
-                {roundStore.strokeRecords.map((stroke) => {
-                    const money = roundStore.moneyRecords.find(
-                        m => m.userId === stroke.userId
-                    )
+            <ResultWrapper>
+                {
+                    roundStore.isLastHole ? <FinishButton onClick={handleFinish}>라운드 종료</FinishButton> : <NextButton onClick={handleNext}>다음 홀 →</NextButton>
+                }
+                {/* 🔥 아코디언 */}
+                <ResultTable>
+                    {roundStore.strokeRecords.map((stroke) => {
+                        const money = roundStore.moneyRecords.find(
+                            m => m.userId === stroke.userId
+                        )
 
-                    return (
-                        <ResultScore
-                            key={stroke.userId}
-                            stroke={stroke}
-                            money={money}
-                            modifyFunc={modifyFunc}
-                        />
-                    )
-                })}
-            </ResultTable>
-
-            {
-                roundStore.isLastHole ? <FinishButton onClick={handleFinish}>라운드 종료</FinishButton> : <NextButton onClick={handleNext}>다음 홀 →</NextButton>}
+                        return (
+                            <ResultScore
+                                key={stroke.userId}
+                                stroke={stroke}
+                                money={money}
+                                modifyFunc={modifyFunc}
+                            />
+                        )
+                    })}
+                </ResultTable>
+            </ResultWrapper>
         </Card>
     )
 });
-
+const ResultWrapper = styled.div`
+    margin-bottom: 90px;
+`
 const ResultTable = styled.div`
     margin-top: 12px;
     padding-bottom: 8px;
@@ -49,7 +53,7 @@ const NextButton = styled.button`
     background: #222;
     color: white;
     border-radius: 14px;
-    margin-bottom: 60px;
+    margin-bottom: 14px;
 `;
 
 const FinishButton = styled.button`
@@ -60,7 +64,7 @@ const FinishButton = styled.button`
     font-weight: 600;
     background: #FD5A1E;
     color: #fff;
-    margin-bottom: 90px;
+    margin-bottom: 14px;
 
     &:active {
         transform: scale(0.97);

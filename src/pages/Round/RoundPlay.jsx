@@ -57,6 +57,10 @@ const RoundPlay = observer(() => {
         setSelectedScores({});
         roundStore.nextHole();
         setMode("input");
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth", // 부드럽게 이동
+        });
     };
 
     const handleFinish = () => {

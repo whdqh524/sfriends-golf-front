@@ -166,15 +166,13 @@ const Input = styled.input`
 const CourseRow = styled.div`
     display: flex;
     gap: 8px;
-    overflow-x: auto;
+    flex-wrap: wrap;
     margin-bottom: 12px;
 
     -webkit-tap-highlight-color: transparent;
 `;
 
 const CourseButton = styled.button`
-    flex: 0 0 auto;
-
     padding: 10px 14px;
     border-radius: 20px;
     border: none;
