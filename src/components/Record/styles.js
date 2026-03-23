@@ -99,7 +99,7 @@ export const HoleNum = styled.div`
 `
 
 export const Par = styled.div`
-    font-size: 10px;
+    font-size: 7px;
     color: #bbb;
 `
 
@@ -110,7 +110,7 @@ export const Stroke = styled.div`
 `
 
 export const Money = styled.div`
-    font-size: 10px;
+    font-size: 7px;
     color: ${({ $positive }) =>
             $positive ? '#1565c0' : '#d32f2f'};
 `
