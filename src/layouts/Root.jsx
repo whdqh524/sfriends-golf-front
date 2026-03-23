@@ -19,7 +19,9 @@ const Root = () => {
     useEffect(() => {
         if(!userStore.isLogin) {
             userStore.signInWithToken().catch(() => {
-                navigate("/login");
+                userStore.refresh().catch(() => {
+                    navigate("/login");
+                })
             });
         }
     }, [])

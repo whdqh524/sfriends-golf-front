@@ -10,15 +10,31 @@ import {useModalStore} from "@/stores/modalStore.js";
 import {CONFIRM_PAYLOAD, MODAL_PAYLOAD} from "@/constants/modal.js";
 import UpdatePasswordModal from "@/components/Modal/UpdatePasswordModal.jsx";
 import AlertModal from "@/components/Modal/AlertModal.jsx";
+import {useRoundStore} from "../stores/roundStore.js";
 
 const Home = observer(() => {
     const [tab, setTab] = useState('FIELD')
     const navigate = useNavigate()
     const userStore = useUserStore();
     const modalStore = useModalStore();
+    const roundStore = useRoundStore();
     useEffect(() => {
         userStore.getCurrentRecord().then(() => {
             clickTab('FIELD');
+            if(userStore.rounding) {
+                modalStore.open(MODAL_PAYLOAD.ALERT_MODAL({
+                    component: AlertModal,
+                    props: {
+                        title: '라운드 진행',
+                        message: '진행중인 라운드가 있습니다. 이어하시겠습니까?',
+                        data: { step: 1 },
+                        cancelText: '취소',
+                        onConfirm: async () => {
+                            navigate(`/rounding?roundId=${userStore.rouding}`);
+                        },
+                    },
+                }))
+            }
         });
     }, []);
 
@@ -119,8 +135,12 @@ const Home = observer(() => {
         {/* 액션 */}
         <CardSection>
             <ActionRow>
-                <ActionButton $primary={"true"}>필드 라운딩</ActionButton>
-                <ActionButton>스크린 라운딩</ActionButton>
+                <ActionButton $primary={"true"} onClick={() => {
+                    navigate('/round/setup', {state: {type: 'FIELD'}});
+                }}>필드 라운딩</ActionButton>
+                <ActionButton onClick={() => {
+                    navigate('/round/setup', {state: {type: 'SCREEN'}});
+                }}>스크린 라운딩</ActionButton>
             </ActionRow>
         </CardSection>
 
@@ -135,7 +155,7 @@ const Container = styled.div`
     flex-direction: column;
     gap: 16px;
 
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
         max-width: 700px;
         margin: 0 auto;
         padding: 24px;

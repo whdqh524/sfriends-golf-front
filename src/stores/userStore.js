@@ -24,6 +24,7 @@ export class UserStore {
     showRecords = [];
     updateModal = {password:"", newPassword:"", confirmPassword:""}
     rounding = undefined;
+    allUsers = [];
 
     constructor() {
         makeAutoObservable(this)
@@ -39,6 +40,7 @@ export class UserStore {
         this.showRecords = [];
         this.rounding = undefined;
         this.updateModal = {password:"", newPassword:"", confirmPassword:""}
+        this.allUsers = [];
     }
 
     async signIn(cellphone, password) {
@@ -69,6 +71,7 @@ export class UserStore {
         this.fieldCount = recordResponse.data.data.field.count;
         this.screenRecords = recordResponse.data.data.screen.records;
         this.screenCount = recordResponse.data.data.screen.count;
+        this.rounding = recordResponse.data.data.rounding;
     }
 
     setShowRecord(tab) {
@@ -96,22 +99,22 @@ export class UserStore {
         this.updateModal = {password:"", newPassword:"", confirmPassword:""}
     }
 
+    async getAllUsers() {
+        const response = await axios.get('/user/all');
+        this.allUsers = response.data.data.users;
+    }
+
     async refresh() {
         const refreshToken = localStorage.getItem('refreshToken')
 
-        if (!refreshToken) return
-
-        try {
-            const res = await axios.post('/user/signInByRefreshToken', {
-                refreshToken
-            })
-
-            this.user = res.data.user;
-
-        } catch (err) {
-            console.log(err);
-            this.logout()
-        }
+        if (!refreshToken) throw new Error("리프레시토큰이 존재하지 않습니다.");
+        const res = await axios.post('/user/signInByRefreshToken', {
+            refreshToken
+        })
+        const { accessToken, user } = res.data.data
+        localStorage.setItem('accessToken', accessToken);
+        this.me = user;
+        this.isLogin = true;
     }
 
     setModalPassword(password) {

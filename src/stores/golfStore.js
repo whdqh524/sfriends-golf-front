@@ -4,19 +4,23 @@ import axios from 'axios'
 import {getStore, useStore} from "./index.js";
 
 export class GolfStore {
-    golfList = [];
+    data = [];
 
     constructor() {
         makeAutoObservable(this)
     }
 
+    clear() {
+        this.data = [];
+    }
+
     async getList() {
-        const response = await axios.get('/golf');
-        this.golfList = response.data.golfList;
+        const response = await axios.get('/golf/all');
+        this.data = response.data.data.golfList;
     }
 
     async create(name, location, courses) {
-        await axios.post('/golf', {name, location, courses});
+        await axios.post('/golf/all', {name, location, courses});
     }
 }
 
