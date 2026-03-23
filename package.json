@@ -6,7 +6,7 @@
   "scripts": {
     "local": "env-cmd -f .env.local vite",
     "dev": "env-cmd -f .env.development vite",
-    "build": "enc-cmd -f .env vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
