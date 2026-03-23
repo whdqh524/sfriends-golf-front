@@ -10,7 +10,7 @@ const Field = lazy(() => import("@/pages/Field.jsx"))
 const Screen = lazy(() => import("@/pages/Screen.jsx"))
 const RoundSetup = lazy(() => import("@/pages/Round/RoundSetup.jsx"))
 const PlayerSelect = lazy(() => import("@/pages/Round/PlayerSelect.jsx"))
-const RoundPlay = lazy(() => import("@pages/Round/RoundPlay.jsx"));
+const RoundPlay = lazy(() => import("@/pages/Round/RoundPlay.jsx"));
 
 
 export const router = createBrowserRouter([

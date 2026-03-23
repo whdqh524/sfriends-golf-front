@@ -2,10 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import {theme} from "@/styles/theme";
 
-const CardSection = ({title, children}) => {
+const CardSection = ({title, extra, children}) => {
     return (<>
         {(title) && (<CardSectionHeader>
                 <Title>{title}</Title>
+            {extra && <Extra>{extra}</Extra>}
             </CardSectionHeader>)}
         <Section>
             <Content>{children}</Content>
@@ -20,6 +21,7 @@ const CardSectionHeader = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 5px;
+    padding-left: 5px;
 `
 const Section = styled.section`
     background: #fff;
@@ -39,6 +41,12 @@ const Title = styled.h2`
     color: ${theme.colors.gray.black};
     font-size: 20px;
     font-weight: 700;
+`;
+
+const Extra = styled.div`
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
 `;
 
 const Content = styled.div`

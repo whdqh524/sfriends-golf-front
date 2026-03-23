@@ -7,8 +7,8 @@ import moment from "moment";
 export class RoundStore {
     golfInfo = {};
     players = [];
-    scores = [];
     currentHole = 1;
+    inputHole = 1;
     isHydrated = false; // 🔥 중요
     constructor() {
         makeAutoObservable(this);
@@ -18,8 +18,10 @@ export class RoundStore {
             localStorage.setItem("roundStore", JSON.stringify({
                 golfInfo: this.golfInfo,
                 players: this.players,
-                scores: this.scores,
                 currentHole: this.currentHole,
+                inputHole: this.inputHole,
+                strokeRecords: this.strokeRecords,
+                moneyRecords: this.moneyRecords,
             }));
         });
 
@@ -31,16 +33,20 @@ export class RoundStore {
             const data = JSON.parse(saved);
             this.golfInfo = data.golfInfo;
             this.players = data.players;
-            this.scores = data.scores;
             this.currentHole = data.currentHole;
+            this.inputHole = data.inputHole;
+            this.strokeRecords = data.strokeRecords;
+            this.moneyRecords = data.moneyRecords;
         }
         this.isHydrated = true;
     }
     clear() {
         this.golfInfo = {};
         this.players = [];
-        this.scores = [];
         this.currentHole = 1;
+        this.inputHole = 1;
+        this.strokeRecords = [];
+        this.moneyRecords = [];
     }
 
 
@@ -48,7 +54,7 @@ export class RoundStore {
         const data = {
             type: this.golfInfo.type, golfId: this.golfInfo.id, frontCourseId: this.golfInfo.frontCourse.id,
             backCourseId: this.golfInfo.backCourse.id, baseMoney: this.golfInfo.baseMoney, date: moment(this.golfInfo.date).format('YYYY-MM-DD'),
-            userIds: this.players, writeUserId: getUserStore().me.id
+            userIds: this.players.map(player => player.id), writeUserId: getUserStore().me.id
         }
         const res = await axios.post('/round/start', data);
         const round = res.data.data.round;
@@ -57,28 +63,31 @@ export class RoundStore {
     }
 
     async fetchFromId(roundId) {
-        const res = await axios.get('/round', {roundId});
+        const res = await axios.get(`/round?roundId=${roundId}`, );
         const round = res.data.data.round;
         this.golfInfo = {
-            type: round.type, golf: round.golf, frontCourse: round.frontCourse, backCourse: round.backCourse,
-            baseMoney: round.baseMoney, date: round.date
+            roundId: round.id, type: round.type, golf: round.golf, frontCourse: round.frontCourse, backCourse: round.backCourse,
+            baseMoney: round.baseMoney, date: round.date,
+            doubleHole: round.doubleHole
         }
+        this.strokeRecords= round.strokeRecords;
+        this.moneyRecords= round.moneyRecords;
+        // this.golfInfo = round;
         for(let i=1; i <= 18; i++) {
             this.currentHole = i;
-            if(!round.strokeRecords[0][`hole${i}`]) {
+            this.inputHole = i;
+            if(round.strokeRecords[0][`hole${i}`] === null || round.strokeRecords[0][`hole${i}`] === undefined) {
                 break;
             }
-            const scoreData = [];
-            for(let j=0; j<=round.strokeRecords.length; j++) {
-                // const strokeRecord = {roundId, round.strokeRecords[j]
-                // scoreData
+        }
+        const playerIds = this.strokeRecords.map((strokeRecord) => strokeRecord.userId);
+        await getUserStore().getAllUsers();
+        this.players = [];
+        for(const user of getUserStore().allUsers) {
+            if(playerIds.includes(user.id)) {
+                this.players.push(user);
             }
-
         }
-        for(const strokeRecord of round.strokeRecords) {
-
-        }
-
     }
 
     setGolfInfo(type, golf, frontCourse, backCourse, baseMoney, date) {
@@ -90,29 +99,54 @@ export class RoundStore {
     }
 
     setPlayers(players) {
-        this.players = players.map(player => player.id);
+        this.players = players;
+    }
+
+    setInputHole(hole) {
+        this.inputHole = hole;
+    }
+
+    async saveHoleScore(strokeRecords) {
+        const holeRecords = [];
+        for(const userId in strokeRecords) {
+            const score = strokeRecords[userId];
+            holeRecords.push({roundId: this.golfInfo.roundId, score: score, userId, number: this.inputHole})
+        }
+        const res = await axios.patch('/round/record', {holeRecords});
+        this.strokeRecords = res.data.data.strokeRecords;
+        this.moneyRecords = res.data.data.moneyRecords;
+    }
+
+    getHolestrokeRecords(hole) {
+        const result = {};
+
+        this.players.forEach(p => {
+            result[p.id] = p.strokeRecords?.[hole];
+        });
+
+        return result;
+    }
+
+    getStroke(number) {
+        const result = {};
+        const r = this.strokeRecords.map(strokeRecord => {
+            result[strokeRecord.userId] = strokeRecord[`hole${number}`]
+        });
+        return result;
     }
 
     nextHole() {
         if (this.currentHole < 18) {
             this.currentHole += 1;
+            this.inputHole = this.currentHole;
         }
     }
 
+    async finish() {
+        await axios.post('/round/finish', {roundId: this.golfInfo.roundId})
+    }
     get isLastHole() {
         return this.currentHole === 18;
-    }
-
-    get totalScores() {
-        const result = {};
-
-        Object.values(this.scores).forEach(hole => {
-            Object.entries(hole).forEach(([userId, score]) => {
-                result[userId] = (result[userId] || 0) + score;
-            });
-        });
-
-        return result;
     }
 }
 

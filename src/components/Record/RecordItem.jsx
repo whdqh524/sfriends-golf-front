@@ -12,7 +12,7 @@ import {
 import PlayerScore from "./PlayerScore.jsx";
 import {useUserStore} from "@/stores/userStore.js";
 
-export default function RecordItem({ item }) {
+export default function RecordItem({ item, modifyFunc }) {
     const [open, setOpen] = useState(false)
     const recordStore = useRecordStore();
     const userStore = useUserStore();
@@ -20,6 +20,26 @@ export default function RecordItem({ item }) {
         v => v.userId === userStore.me.id
     )
 
+    const renderDetail = () => (
+        <>
+            <Detail>
+                {item.strokeRecords.map((stroke) => {
+                    const money = item.moneyRecords.find(
+                        m => m.userId === stroke.userId
+                    )
+
+                    return (
+                        <PlayerScore
+                            key={stroke.userId}
+                            stroke={stroke}
+                            money={money}
+                            item={item}
+                        />
+                    )
+                })}
+            </Detail>
+        </>
+    )
     return (
         <Card>
 
@@ -43,24 +63,10 @@ export default function RecordItem({ item }) {
             </Summary>
 
             {/* 🔥 아코디언 */}
-            <DetailWrapper $open={open}>
-                <Detail>
-                    {item.strokeRecords.map((stroke) => {
-                        const money = item.moneyRecords.find(
-                            m => m.userId === stroke.userId
-                        )
+            {
+                modifyFunc ? renderDetail() : <DetailWrapper $open={open}>{renderDetail()}</DetailWrapper>
+            }
 
-                        return (
-                            <PlayerScore
-                                key={stroke.userId}
-                                stroke={stroke}
-                                money={money}
-                                item={item}
-                            />
-                        )
-                    })}
-                </Detail>
-            </DetailWrapper>
 
         </Card>
     )

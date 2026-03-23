@@ -9,13 +9,15 @@ import {
     Money,
     SummaryRow,
     SumBox
-} from './styles'
+} from '@/components/Record/styles'
+import {observer} from "mobx-react";
+import {useRoundStore} from "@/stores/roundStore.js";
 
-export default function PlayerScore({ stroke, money, item }) {
-
+export default observer(({ stroke, money, modifyFunc }) => {
+    const roundStore = useRoundStore();
     const holes = [
-        ...item.frontCourse.holes,
-        ...item.backCourse.holes
+        ...roundStore.golfInfo.frontCourse.holes,
+        ...roundStore.golfInfo.backCourse.holes
     ]
 
     const getScoreColor = (stroke) => {
@@ -49,8 +51,6 @@ export default function PlayerScore({ stroke, money, item }) {
         totalMoney: sum(holeData, 'money'),
     }
 
-    const doubleHole = Array.from(item.doubleHole)
-
     return (
         <PlayerRow>
 
@@ -63,8 +63,10 @@ export default function PlayerScore({ stroke, money, item }) {
                     const data = holeData[idx]
 
                     return (
-                        <Hole key={idx}>
-                            <HoleNum $multiple={item.doubleHole.includes(idx+1)}>{idx + 1}</HoleNum>
+                        <Hole key={idx} onClick={() => {
+                            modifyFunc(idx+1)
+                        }}>
+                            <HoleNum $multiple={roundStore.golfInfo.doubleHole.includes(idx+1)}>{idx + 1}</HoleNum>
                             <Par>PAR {hole.par}</Par>
 
                             <Stroke $color={getScoreColor(data.stroke)}>
@@ -110,6 +112,7 @@ export default function PlayerScore({ stroke, money, item }) {
                     </Money>
                 </SumBox>
             </SummaryRow>
+
         </PlayerRow>
     )
-}
+})

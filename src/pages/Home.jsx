@@ -7,7 +7,7 @@ import {observer} from "mobx-react";
 import {useUserStore} from "@/stores/userStore.js";
 import moment from "moment";
 import {useModalStore} from "@/stores/modalStore.js";
-import {CONFIRM_PAYLOAD, MODAL_PAYLOAD} from "@/constants/modal.js";
+import {MODAL_PAYLOAD} from "@/constants/modal.js";
 import UpdatePasswordModal from "@/components/Modal/UpdatePasswordModal.jsx";
 import AlertModal from "@/components/Modal/AlertModal.jsx";
 import {useRoundStore} from "../stores/roundStore.js";
@@ -30,12 +30,13 @@ const Home = observer(() => {
                         data: { step: 1 },
                         cancelText: '취소',
                         onConfirm: async () => {
-                            navigate(`/rounding?roundId=${userStore.rouding}`);
+                            navigate(`/round/play?roundId=${userStore.rounding.id}`);
                         },
                     },
                 }))
             }
         });
+        userStore.getAllUsers().then();
     }, []);
 
     const clickTab = (value) => {
@@ -102,12 +103,25 @@ const Home = observer(() => {
                     <Value color="#1565c0">{userStore.me?.screenHandy}</Value>
                 </Stat>
             </HandicapRow>
+            <UserHandyList>
+                {
+                    userStore.allUsers.filter(user => user.id !== userStore.me?.id).map(user => (
+                        <UserHandyItem>
+                            <div><span>{user.name}</span></div>
+                            <UserHandyGroup>
+                                <UserHandyValue color="#2e7d32">{user.fieldHandy}</UserHandyValue>
+                                <UserHandyValue color="#1565c0">{user.screenHandy}</UserHandyValue>
+                            </UserHandyGroup>
+                        </UserHandyItem>
+                    ))
+                }
+            </UserHandyList>
         </CardSection>
 
         {/* 최근 라운드 */}
         <CardSection
             title="최근 라운드"
-            extra={<MoreButton onClick={() => navigate('/rounds')}>
+            extra={<MoreButton onClick={() => navigate(`/${tab}`)}>
                 더보기
             </MoreButton>}
         >
@@ -126,9 +140,9 @@ const Home = observer(() => {
                         <Score>{round.strokeRecords.find(data => data.userId === userStore.me?.id).score}</Score>
                     </RoundItem>))
                 }
-                <MoreRow onClick={() => navigate(`/${tab}`)}>
-                    더보기 →
-                </MoreRow>
+                {/*<MoreRow onClick={() => navigate(`/${tab}`)}>*/}
+                {/*    더보기 →*/}
+                {/*</MoreRow>*/}
             </RoundList>
         </CardSection>
 
@@ -198,6 +212,8 @@ const HandicapRow = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
 `
 
 const Stat = styled.div`
@@ -229,6 +245,7 @@ const RoundItem = styled.div`
     display: flex;
     justify-content: space-between;
     font-size: 14px;
+    padding: 5px 0;
     
     span {
         font-weight: 500;
@@ -295,10 +312,42 @@ const MoreButton = styled.div`
     }
 `
 
+const UserHandyList = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+const UserHandyItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin: 0 30px;
+    & + & {
+        border-top: 1px solid #eee;
+    }
+    
+
+    span {
+        font-weight: 400;
+    }
+`
+
+const UserHandyGroup = styled.div`
+    display: flex;
+    gap: 12px;
+    align-items: center;
+`;
+
+const UserHandyValue = styled.div`
+    padding: 7px 0;
+    width: 20px;
+    color: ${({color}) => color};
+`
+
 const RoundList = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
 `
 
 const MoreRow = styled.div`

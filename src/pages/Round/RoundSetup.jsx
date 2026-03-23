@@ -111,12 +111,15 @@ const RoundSetup = () => {
                         </CourseRow>
                     </>)}
 
-                <Button
-                    disabled={!selectedGolf || !front || !back}
-                    onClick={confirm}
-                >
-                    다음
-                </Button>
+                <ButtonWrapper>
+                    <Button
+                        disabled={!selectedGolf || !front || !back}
+                        onClick={confirm}
+                    >
+                        다음
+                    </Button>
+                </ButtonWrapper>
+
 
             </CardSection>
 
@@ -208,3 +211,7 @@ const StyledDatePicker = styled(DatePicker)`
 
     font-size: 14px;
 `;
+
+const ButtonWrapper = styled.div`
+    margin-top: 10px;
+`
