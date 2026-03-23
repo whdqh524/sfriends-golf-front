@@ -80,7 +80,9 @@ export default function PlayerScore({ stroke, money, item }) {
                     <div>OUT</div>
                     <b>{summary.frontScore}</b>
                     <Money $positive={summary.frontMoney > 0}>
-                        {summary.frontMoney}
+                        <div className={'summary'}>
+                            {summary.frontMoney}
+                        </div>
                     </Money>
                 </SumBox>
 
@@ -88,7 +90,9 @@ export default function PlayerScore({ stroke, money, item }) {
                     <div>IN</div>
                     <b>{summary.backScore}</b>
                     <Money $positive={summary.backMoney > 0}>
-                        {summary.backMoney}
+                        <div className={'summary'}>
+                            {summary.backMoney}
+                        </div>
                     </Money>
                 </SumBox>
 
@@ -96,7 +100,9 @@ export default function PlayerScore({ stroke, money, item }) {
                     <div>TOTAL</div>
                     <b>{summary.totalScore}</b>
                     <Money $positive={summary.totalMoney > 0}>
-                        {summary.totalMoney}
+                        <div className={'summary'}>
+                            {summary.totalMoney}
+                        </div>
                     </Money>
                 </SumBox>
             </SummaryRow>

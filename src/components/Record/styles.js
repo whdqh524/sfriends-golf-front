@@ -113,6 +113,9 @@ export const Money = styled.div`
     font-size: 7px;
     color: ${({ $positive }) =>
             $positive ? '#1565c0' : '#d32f2f'};
+    .summary {
+        font-size: 10px;
+    }
 `
 
 /* 🔥 합계 영역 */
