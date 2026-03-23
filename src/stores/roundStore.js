@@ -3,13 +3,13 @@ import axios from 'axios'
 import {getStore, useStore} from "./index.js";
 
 export class RoundStore {
-    records = [];
-    offset = 0;
-    limit = 10;
-    totalCount = 0;
 
     constructor() {
         makeAutoObservable(this)
+    }
+
+    async getGolfAll() {
+        const response = await axios.get('/golf/all')
     }
 
     async create() {

@@ -71,7 +71,7 @@ export const HoleGrid = styled.div`
     gap: 6px;
 
     /* 모바일: 2줄 (9 + 9) */
-    grid-template-columns: repeat(9, minmax(25px, 1fr));
+    grid-template-columns: repeat(9, minmax(22px, 1fr));
 
     /* PC: 한 줄 */
     @media (min-width: 1024px) {
