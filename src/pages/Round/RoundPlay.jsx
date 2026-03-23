@@ -112,6 +112,7 @@ export default RoundPlay;
 
 const Container = styled.div`
     min-height: 100vh;
+    margin-bottom: 70px;
 `;
 
 const Header = styled.div`
