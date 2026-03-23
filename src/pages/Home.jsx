@@ -88,6 +88,18 @@ const Home = observer(() => {
             </ProfileRow>
         </CardSection>
 
+        {/* 액션 */}
+        <CardSection>
+            <ActionRow>
+                <ActionButton $primary={"true"} onClick={() => {
+                    navigate('/round/setup', {state: {type: 'FIELD'}});
+                }}>필드 라운딩</ActionButton>
+                <ActionButton onClick={() => {
+                    navigate('/round/setup', {state: {type: 'SCREEN'}});
+                }}>스크린 라운딩</ActionButton>
+            </ActionRow>
+        </CardSection>
+
         {/* 핸디 */}
         <CardSection title={'핸디'}>
             <HandicapRow>
@@ -145,19 +157,6 @@ const Home = observer(() => {
                 {/*</MoreRow>*/}
             </RoundList>
         </CardSection>
-
-        {/* 액션 */}
-        <CardSection>
-            <ActionRow>
-                <ActionButton $primary={"true"} onClick={() => {
-                    navigate('/round/setup', {state: {type: 'FIELD'}});
-                }}>필드 라운딩</ActionButton>
-                <ActionButton onClick={() => {
-                    navigate('/round/setup', {state: {type: 'SCREEN'}});
-                }}>스크린 라운딩</ActionButton>
-            </ActionRow>
-        </CardSection>
-
     </Container>);
 });
 
