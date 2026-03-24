@@ -5,13 +5,20 @@ import {getStore, useStore} from "./index.js";
 
 export class GolfStore {
     data = [];
-
+    register = {}
     constructor() {
         makeAutoObservable(this)
     }
 
     clear() {
         this.data = [];
+        this.register = {};
+    }
+
+    setRegisterInfo({id, name, location, courses}) {
+        this.register = {
+            id, name, location, courses
+        }
     }
 
     async getList() {
@@ -19,8 +26,18 @@ export class GolfStore {
         this.data = response.data.data.golfList;
     }
 
-    async create(name, location, courses) {
-        await axios.post('/golf/all', {name, location, courses});
+    async save() {
+        const data = {...this.register};
+
+        data.courses.map(course => {
+            const holes = {};
+            course.holes.map(hole => {
+                holes[`${hole.number}`] = hole.par;
+            });
+            course.holes = holes;
+        })
+        await axios.post('/golf', data);
+        await this.getList();
     }
 }
 

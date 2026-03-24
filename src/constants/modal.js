@@ -30,10 +30,10 @@ export const MODAL_PAYLOAD = {
         confirmText: "저장"
     }),
 
-    ROUND_START_MODAL: createModalPayload({
+    SAVE_GOLF_MODAL: createModalPayload({
         ...BASE_MODAL_PROPS,
-        title: '라운드 시작',
-        confirmText: "시작"
+        title: '골프장 등록',
+        confirmText: "저장"
     }),
 
     ALERT_MODAL: createModalPayload({

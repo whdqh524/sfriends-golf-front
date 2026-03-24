@@ -2,15 +2,18 @@ import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import CardSection from "@/components/CardSection";
 import {Container, Button, Select} from "@/styles/common";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {useStore} from "@/stores";
 import {observer} from "mobx-react";
+import {MODAL_PAYLOAD} from "../../constants/modal.js";
+import SaveGolfModal from "../../components/Modal/SaveGolfModal.jsx";
 
 const RoundSetup = () => {
     const navigate = useNavigate();
-    const {roundStore, golfStore} = useStore();
-    const [type, setType] = useState("FIELD");
+    const {roundStore, golfStore, modalStore} = useStore();
+    const location = useLocation();
+    const [type, setType] = useState(location.state.type);
     const [amount, setAmount] = useState(1000);
     const [selectedGolf, setSelectedGolf] = useState(null);
     const [front, setFront] = useState(null);
@@ -18,13 +21,25 @@ const RoundSetup = () => {
     const [date, setDate] = useState(new Date());
 
     useEffect(() => {
-        golfStore.getList().then();
-    }, [])
+        golfStore.getList();
+    }, []);
+
     const handleGolf = (id) => {
-        const golf = golfStore.data.find(g => g.id === Number(id));
+        const golf = golfStore.data.find((g) => g.id === Number(id));
         setSelectedGolf(golf);
         setFront(null);
         setBack(null);
+    };
+
+    const openSaveGolfModal = (mode) => {
+        modalStore.open(MODAL_PAYLOAD.SAVE_GOLF_MODAL({
+            component: SaveGolfModal, props: {
+                data: {mode: selectedGolf ? 'edit' : 'create', golf: selectedGolf}, onConfirm: async () => {
+                    if(!golfStore.register.name) return false;
+                    await golfStore.save();
+                },
+            },
+        }));
     };
 
     const confirm = () => {
@@ -33,33 +48,23 @@ const RoundSetup = () => {
     };
 
     return (<Container>
-
             <CardSection
                 title="골프장 / 코스 선택"
-                extra={<AddButton onClick={() => console.log("모달 오픈")}>
-                    + 등록
-                </AddButton>}
+                extra={<AddButton onClick={openSaveGolfModal}>+ 등록</AddButton>}
             >
                 {/* 타입 선택 */}
                 <Label>라운드 타입</Label>
                 <TypeRow>
-                    <TypeButton
-                        $active={type === "FIELD"}
-                        onClick={() => setType("FIELD")}
-                    >
+                    <TypeButton $active={type === "FIELD"} onClick={() => setType("FIELD")}>
                         필드
                     </TypeButton>
-                    <TypeButton
-                        $active={type === "SCREEN"}
-                        onClick={() => setType("SCREEN")}
-                    >
+                    <TypeButton $active={type === "SCREEN"} onClick={() => setType("SCREEN")}>
                         스크린
                     </TypeButton>
                 </TypeRow>
 
                 {/* 날짜 */}
                 <Label>라운드 날짜</Label>
-
                 <DatePickerWrapper>
                     <StyledDatePicker
                         selected={date}
@@ -77,11 +82,15 @@ const RoundSetup = () => {
                     onChange={(e) => setAmount(e.target.value)}
                 />
 
-                {/* 골프장 선택 */}
-                <Label>골프장</Label>
+                {/* 골프장 선택 + 수정 버튼 */}
+                <LabelRow>
+                    <Label>골프장</Label>
+                    {selectedGolf && <EditButton onClick={openSaveGolfModal}>수정</EditButton>}
+                </LabelRow>
+
                 <Select onChange={(e) => handleGolf(e.target.value)}>
                     <option value="">골프장 선택</option>
-                    {golfStore.data.map(golf => (<option key={golf.id} value={golf.id}>
+                    {golfStore.data.map((golf) => (<option key={golf.id} value={golf.id}>
                             {golf.name}
                         </option>))}
                 </Select>
@@ -90,7 +99,7 @@ const RoundSetup = () => {
                 {selectedGolf && (<>
                         <Label>전반 코스</Label>
                         <CourseRow>
-                            {selectedGolf.courses.map(course => (<CourseButton
+                            {selectedGolf.courses.map((course) => (<CourseButton
                                     key={course.id}
                                     onClick={() => setFront(course)}
                                     $active={front?.id === course.id}
@@ -101,7 +110,7 @@ const RoundSetup = () => {
 
                         <Label>후반 코스</Label>
                         <CourseRow>
-                            {selectedGolf.courses.map(course => (<CourseButton
+                            {selectedGolf.courses.map((course) => (<CourseButton
                                     key={course.id}
                                     onClick={() => setBack(course)}
                                     $active={back?.id === course.id}
@@ -112,21 +121,15 @@ const RoundSetup = () => {
                     </>)}
 
                 <ButtonWrapper>
-                    <Button
-                        disabled={!selectedGolf || !front || !back}
-                        onClick={confirm}
-                    >
+                    <Button disabled={!selectedGolf || !front || !back} onClick={confirm}>
                         다음
                     </Button>
                 </ButtonWrapper>
-
-
             </CardSection>
-
         </Container>);
 };
 
-export default observer(RoundSetup)
+export default observer(RoundSetup);
 
 const Label = styled.div`
     font-size: 13px;
@@ -213,3 +216,19 @@ const StyledDatePicker = styled(DatePicker)`
 const ButtonWrapper = styled.div`
     margin-top: 10px;
 `
+
+const LabelRow = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const EditButton = styled.div`
+    font-size: 12px;
+    color: #999;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
