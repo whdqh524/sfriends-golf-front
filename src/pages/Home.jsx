@@ -19,24 +19,36 @@ const Home = observer(() => {
     const modalStore = useModalStore();
     const roundStore = useRoundStore();
     useEffect(() => {
-        userStore.getCurrentRecord().then(() => {
-            clickTab('FIELD');
-            if(userStore.rounding) {
-                modalStore.open(MODAL_PAYLOAD.ALERT_MODAL({
-                    component: AlertModal,
-                    props: {
-                        title: '라운드 진행',
-                        message: '진행중인 라운드가 있습니다. 이어하시겠습니까?',
-                        data: { step: 1 },
-                        cancelText: '취소',
-                        onConfirm: async () => {
-                            navigate(`/round/play?roundId=${userStore.rounding.id}`);
+        const fetchData = () => {
+            userStore.getCurrentRecord().then(() => {
+                clickTab('FIELD');
+
+                if (userStore.rounding) {
+                    modalStore.open(MODAL_PAYLOAD.ALERT_MODAL({
+                        component: AlertModal,
+                        props: {
+                            title: '라운드 진행',
+                            message: '진행중인 라운드가 있습니다. 이어하시겠습니까?',
+                            data: { step: 1 },
+                            cancelText: '취소',
+                            onConfirm: async () => {
+                                navigate(`/round/play?roundId=${userStore.rounding.id}`);
+                            },
                         },
-                    },
-                }))
-            }
-        });
-        userStore.getAllUsers().then();
+                    }))
+                }
+            });
+
+            userStore.getAllUsers().then();
+        };
+
+        fetchData();
+
+        window.addEventListener("focus", fetchData);
+
+        return () => {
+            window.removeEventListener("focus", fetchData);
+        };
     }, []);
 
     const clickTab = (value) => {
