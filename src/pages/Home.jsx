@@ -117,8 +117,8 @@ const Home = observer(() => {
             </HandicapRow>
             <UserHandyList>
                 {
-                    userStore.allUsers.filter(user => user.id !== userStore.me?.id).map(user => (
-                        <UserHandyItem>
+                    userStore.allUsers.filter(user => user.id !== userStore.me?.id).map((user, idx) => (
+                        <UserHandyItem key={idx}>
                             <div><span>{user.name}</span></div>
                             <UserHandyGroup>
                                 <UserHandyValue color="#2e7d32">{user.fieldHandy}</UserHandyValue>

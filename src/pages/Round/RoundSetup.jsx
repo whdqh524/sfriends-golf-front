@@ -3,11 +3,12 @@ import DatePicker from "react-datepicker";
 import CardSection from "@/components/CardSection";
 import {Container, Button, Select} from "@/styles/common";
 import {useNavigate, useLocation} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
+import ReactSelect from "react-select";
 import {useStore} from "@/stores";
 import {observer} from "mobx-react";
-import {MODAL_PAYLOAD} from "../../constants/modal.js";
-import SaveGolfModal from "../../components/Modal/SaveGolfModal.jsx";
+import {MODAL_PAYLOAD} from "@/constants/modal.js";
+import SaveGolfModal from "@/components/Modal/SaveGolfModal.jsx";
 
 const RoundSetup = () => {
     const navigate = useNavigate();
@@ -19,6 +20,18 @@ const RoundSetup = () => {
     const [front, setFront] = useState(null);
     const [back, setBack] = useState(null);
     const [date, setDate] = useState(new Date());
+
+    const golfOptions = golfStore.data.map(golf => ({ value: golf.id, label: golf.name }));
+
+    const reactSelectStyles = {
+        control: (base) => ({
+            ...base,
+            borderRadius: "10px",
+            padding: "4px",
+            borderColor: "#ddd",
+            boxShadow: "none",
+        }),
+    };
 
     useEffect(() => {
         golfStore.getList();
@@ -34,9 +47,10 @@ const RoundSetup = () => {
     const openSaveGolfModal = (mode) => {
         modalStore.open(MODAL_PAYLOAD.SAVE_GOLF_MODAL({
             component: SaveGolfModal, props: {
-                data: {mode: selectedGolf ? 'edit' : 'create', golf: selectedGolf}, onConfirm: async () => {
+                data: {mode, golf: selectedGolf}, onConfirm: async () => {
                     if(!golfStore.register.name) return false;
-                    await golfStore.save();
+                    const golf = await golfStore.save();
+                    handleGolf(golf.id);
                 },
             },
         }));
@@ -50,7 +64,10 @@ const RoundSetup = () => {
     return (<Container>
             <CardSection
                 title="골프장 / 코스 선택"
-                extra={<AddButton onClick={openSaveGolfModal}>+ 등록</AddButton>}
+                extra={<AddButton onClick={() => {
+                    setSelectedGolf(null);
+                    openSaveGolfModal('create');
+                }}>+ 등록</AddButton>}
             >
                 {/* 타입 선택 */}
                 <Label>라운드 타입</Label>
@@ -85,15 +102,25 @@ const RoundSetup = () => {
                 {/* 골프장 선택 + 수정 버튼 */}
                 <LabelRow>
                     <Label>골프장</Label>
-                    {selectedGolf && <EditButton onClick={openSaveGolfModal}>수정</EditButton>}
+                    {selectedGolf && <EditButton onClick={() => {
+                        openSaveGolfModal('edit');
+                    }}>수정</EditButton>}
                 </LabelRow>
 
-                <Select onChange={(e) => handleGolf(e.target.value)}>
-                    <option value="">골프장 선택</option>
-                    {golfStore.data.map((golf) => (<option key={golf.id} value={golf.id}>
-                            {golf.name}
-                        </option>))}
-                </Select>
+                <ReactSelect
+                    options={golfOptions}
+                    styles={reactSelectStyles}
+                    placeholder="골프장 검색 및 선택"
+                    value={golfOptions.find(opt => opt.value === selectedGolf?.id) || null}
+                    onChange={(option) => handleGolf(option.value)}
+                    isClearable
+                />
+                {/*<Select ref={selectRef} onChange={(e) => handleGolf(e.target.value)}>*/}
+                {/*    <option value="">골프장 선택</option>*/}
+                {/*    {golfStore.data.map((golf) => (<option key={golf.id} value={golf.id}>*/}
+                {/*            {golf.name}*/}
+                {/*        </option>))}*/}
+                {/*</Select>*/}
 
                 {/* 코스 선택 */}
                 {selectedGolf && (<>
@@ -232,3 +259,4 @@ const EditButton = styled.div`
         text-decoration: underline;
     }
 `;
+

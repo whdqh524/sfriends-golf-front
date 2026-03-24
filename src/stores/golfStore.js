@@ -38,6 +38,7 @@ export class GolfStore {
         })
         await axios.post('/golf', data);
         await this.getList();
+        return this.data.find(golf => golf.name === data.name);
     }
 }
 

@@ -44,6 +44,10 @@ const SaveGolfModal = ({ data }) => {
                     holes: convertHolesArrayToObject(c.holes), // ✅ 핵심 수정
                 }))
             );
+        } else {
+            setName("");
+            setLocation("");
+            setCourses([]);
         }
     }, [golf]);
 

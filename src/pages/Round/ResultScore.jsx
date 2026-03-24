@@ -48,14 +48,13 @@ export default observer(({ stroke, money, modifyFunc }) => {
         totalScore: sum(holeData, 'stroke') + sum(holeData, 'par'),
         frontMoney: sum(front, 'money'),
         backMoney: sum(back, 'money'),
-        totalMoney: sum(holeData, 'money'),
     }
 
     return (
         <PlayerRow>
 
             <PlayerHeader>
-                {stroke.user.name} / 타수 {stroke.score} / (핸디 {stroke.handy})
+                {stroke.user.name} / 타수 {stroke.score} / 핸디 {stroke.handy} ({`${money.handyMoney > 0 ? '+' : ''}${money.handyMoney}`})
             </PlayerHeader>
 
             <HoleGrid>
@@ -105,9 +104,9 @@ export default observer(({ stroke, money, modifyFunc }) => {
                 <SumBox>
                     <div>TOTAL</div>
                     <b>{summary.totalScore}({`${summary.totalStrokeScore > 0 ? '+' : '-'}${summary.totalStrokeScore}`})</b>
-                    <Money $positive={summary.totalMoney > 0}>
+                    <Money $positive={money.resultMoney > 0}>
                         <div className={'summary'}>
-                            {summary.totalMoney}
+                            {money.resultMoney}
                         </div>
                     </Money>
                 </SumBox>

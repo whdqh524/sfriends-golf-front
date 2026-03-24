@@ -19,7 +19,7 @@ export default observer(({ modifyFunc, handleNext, handleFinish }) => {
                 }
                 {/* 🔥 아코디언 */}
                 <ResultTable>
-                    {roundStore.strokeRecords.map((stroke) => {
+                    {roundStore.strokeRecords.map((stroke, idx) => {
                         const money = roundStore.moneyRecords.find(
                             m => m.userId === stroke.userId
                         )
@@ -28,7 +28,7 @@ export default observer(({ modifyFunc, handleNext, handleFinish }) => {
                             <ResultScore
                                 key={stroke.userId}
                                 stroke={stroke}
-                                money={money}
+                                money={roundStore.moneyRecords[idx]}
                                 modifyFunc={modifyFunc}
                             />
                         )

@@ -23,7 +23,7 @@ export default function RecordItem({ item, modifyFunc }) {
     const renderDetail = () => (
         <>
             <Detail>
-                {item.strokeRecords.map((stroke) => {
+                {item.strokeRecords.map((stroke, idx) => {
                     const money = item.moneyRecords.find(
                         m => m.userId === stroke.userId
                     )
@@ -32,7 +32,7 @@ export default function RecordItem({ item, modifyFunc }) {
                         <PlayerScore
                             key={stroke.userId}
                             stroke={stroke}
-                            money={money}
+                            money={item.moneyRecords[idx]}
                             item={item}
                         />
                     )
