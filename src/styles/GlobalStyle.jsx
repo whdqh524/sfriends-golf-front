@@ -24,6 +24,10 @@ const GlobalStyle = createGlobalStyle`
         &::-webkit-scrollbar {
             display: none; /* Chrome, Safari */
         }
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;             /* Chrome, 삼성 인터넷 */
+        }
     }
 
     body {
