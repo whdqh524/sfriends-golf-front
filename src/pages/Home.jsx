@@ -10,14 +10,14 @@ import {useModalStore} from "@/stores/modalStore.js";
 import {MODAL_PAYLOAD} from "@/constants/modal.js";
 import UpdatePasswordModal from "@/components/Modal/UpdatePasswordModal.jsx";
 import AlertModal from "@/components/Modal/AlertModal.jsx";
-import {useRoundStore} from "../stores/roundStore.js";
+import {useRecordStore} from "../stores/recordStore.js";
 
 const Home = observer(() => {
     const [tab, setTab] = useState('FIELD')
     const navigate = useNavigate()
     const userStore = useUserStore();
     const modalStore = useModalStore();
-    const roundStore = useRoundStore();
+    const recordStore = useRecordStore();
     useEffect(() => {
         const fetchData = () => {
             userStore.getCurrentRecord().then(() => {
