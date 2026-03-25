@@ -2,7 +2,7 @@
   "name": "S.Friends 골프",
   "short_name": "SF.Golf",
   "description": "S,Friends 골프모임 기록관리 앱",
-  "start_url": "/",
+  "start_url": "https://",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",

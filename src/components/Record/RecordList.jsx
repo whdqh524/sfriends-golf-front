@@ -6,10 +6,13 @@ import {observer} from "mobx-react";
 
 export default observer(({ type }) => {
     const recordStore = useRecordStore();
+    const [isInit, setIsInit] = useState(true)
     const observerRef = useRef(null)
     useEffect(() => {
         recordStore.clear();
-        recordStore.getList(type).then(() => {});
+        recordStore.getList(type).then(() => {
+            setIsInit(false);
+        });
     }, [type, recordStore.selectedTab])
 
     useEffect(() => {
@@ -19,7 +22,7 @@ export default observer(({ type }) => {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (
-                    entries[0].isIntersecting &&
+                    !isInit && entries[0].isIntersecting &&
                     !recordStore.loading &&
                     recordStore.hasMore
                 ) {
