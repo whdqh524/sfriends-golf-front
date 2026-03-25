@@ -6,7 +6,6 @@ import {observer} from "mobx-react";
 
 export default observer(({ type }) => {
     const recordStore = useRecordStore();
-    const [isInit, setIsInit] = useState(true)
     const observerRef = useRef(null)
     useEffect(() => {
         recordStore.clear();
@@ -22,7 +21,7 @@ export default observer(({ type }) => {
         const observer = new IntersectionObserver(
             (entries) => {
                 if (
-                    !isInit && entries[0].isIntersecting &&
+                    entries[0].isIntersecting &&
                     !recordStore.loading &&
                     recordStore.hasMore
                 ) {

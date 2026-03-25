@@ -10,7 +10,6 @@ export class RecordStore {
     selectedTab = 'MY';
     loading = false;
     hasMore = true;
-    type = 'FIELD';
 
     constructor() {
         makeAutoObservable(this)
@@ -55,10 +54,6 @@ export class RecordStore {
 
     setHasMore(hasMore) {
         this.hasMore = hasMore;
-    }
-
-    setType(type) {
-        this.type = type;
     }
 }
 

@@ -17,7 +17,7 @@ export default function BottomNav() {
             <NavItem
                 $active={isActive('/field')}
                 onClick={() => {
-                    recordStore.clear();
+                    recordStore.setLoading(true);
                     navigate('/field')}
                 }
                 >
@@ -34,7 +34,7 @@ export default function BottomNav() {
             <NavItem
                 $active={isActive('/screen')}
                 onClick={() => {
-                    recordStore.clear();
+                    recordStore.setLoading(true);
                     navigate('/screen')}
                 }
             >

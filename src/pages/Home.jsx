@@ -145,7 +145,10 @@ const Home = observer(() => {
         {/* 최근 라운드 */}
         <CardSection
             title="최근 라운드"
-            extra={<MoreButton onClick={() => navigate(`/${tab}`)}>
+            extra={<MoreButton onClick={() => {
+                recordStore.setLoading(true);
+                navigate(`/${tab}`)}
+            }>
                 더보기
             </MoreButton>}
         >
