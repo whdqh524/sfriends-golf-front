@@ -11,7 +11,7 @@ import {
     MouseSensor,
     TouchSensor
 } from "@dnd-kit/core";
-
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
     SortableContext,
     verticalListSortingStrategy,
@@ -154,14 +154,13 @@ const RoundPlay = observer(() => {
                     <HoleInfo>
                         {roundStore.inputHole}번홀 (Par {parList[roundStore.inputHole - 1]})
                     </HoleInfo>
-                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis]}>
                         <SortableContext
                             items={roundStore.players.map(p => p.id)}
                             strategy={verticalListSortingStrategy}
                         >
                             {roundStore.players.map(player => (
                                 <SortableRow key={player.id} player={player}>
-                                    <Name>{player.name}</Name>
                                     <ScoreRow>
                                         {scoreOptions(roundStore.inputHole).map(score => (
                                             <ScoreButton

@@ -99,6 +99,9 @@ export class RoundStore {
 
     setPlayers(players) {
         this.players = players;
+        if(this.strokeRecords && this.strokeRecords.length > 0) {
+            // const strokeRecords =
+        }
     }
 
     setInputHole(hole) {
@@ -107,23 +110,13 @@ export class RoundStore {
 
     async saveHoleScore(strokeRecords) {
         const holeRecords = [];
-        for(const userId in strokeRecords) {
-            const score = strokeRecords[userId];
-            holeRecords.push({roundId: this.golfInfo.roundId, score: score, userId, number: this.inputHole})
+        for(const user of this.players) {
+            const score = strokeRecords[user.id];
+            holeRecords.push({roundId: this.golfInfo.roundId, score: score, userId: user.id, number: this.inputHole})
         }
         const res = await axios.patch('/round/record', {holeRecords});
         this.strokeRecords = res.data.data.strokeRecords;
         this.moneyRecords = res.data.data.moneyRecords;
-    }
-
-    getHolestrokeRecords(hole) {
-        const result = {};
-
-        this.players.forEach(p => {
-            result[p.id] = p.strokeRecords?.[hole];
-        });
-
-        return result;
     }
 
     getStroke(number) {
