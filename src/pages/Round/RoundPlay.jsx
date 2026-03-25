@@ -3,6 +3,23 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRoundStore } from "@/stores/roundStore.js";
 import { observer } from "mobx-react";
+import {
+    DndContext,
+    closestCenter,
+    useSensor,
+    useSensors,
+    MouseSensor,
+    TouchSensor
+} from "@dnd-kit/core";
+
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+    useSortable,
+    arrayMove
+} from "@dnd-kit/sortable";
+
+import { CSS } from "@dnd-kit/utilities";
 import ResultItem from "@/pages/Round/ResultItem.jsx";
 
 const RoundPlay = observer(() => {
@@ -13,6 +30,12 @@ const RoundPlay = observer(() => {
 
     const [mode, setMode] = useState("input");
     const [selectedScores, setSelectedScores] = useState({});
+
+    const [players, setPlayers] = useState([]);
+
+    useEffect(() => {
+        setPlayers(roundStore.players);
+    }, [roundStore.players]);
 
     useEffect(() => {
         if (roundId) {
@@ -69,6 +92,57 @@ const RoundPlay = observer(() => {
         });
     }
 
+    const sensors = useSensors(
+        useSensor(MouseSensor), // PC
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 200,      // 200ms 누르면 드래그 시작
+                tolerance: 5,    // 살짝 움직이는 건 스크롤로 처리
+            },
+        })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (!over) return;
+
+        if (active.id !== over.id) {
+            const oldIndex = players.findIndex(p => p.id === active.id);
+            const newIndex = players.findIndex(p => p.id === over.id);
+
+            roundStore.setPlayers(arrayMove(players, oldIndex, newIndex));
+        }
+    };
+
+    const SortableRow = ({ player, children }) => {
+        const {
+            attributes,
+            listeners,
+            setNodeRef,
+            transform,
+            transition,
+        } = useSortable({ id: player.id });
+
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+        };
+
+        return (
+            <Row ref={setNodeRef} style={style}>
+                <TopRow>
+                    <DragHandle {...attributes} {...listeners}>
+                        ☰
+                    </DragHandle>
+                    <Name>{player.name}</Name>
+                </TopRow>
+
+                {children}
+            </Row>
+        );
+    };
+
     return (
         <Container>
             <Header>
@@ -80,23 +154,29 @@ const RoundPlay = observer(() => {
                     <HoleInfo>
                         {roundStore.inputHole}번홀 (Par {parList[roundStore.inputHole - 1]})
                     </HoleInfo>
-                    <></>
-                    {roundStore.players.map(player => (
-                        <Row key={player.id}>
-                            <Name>{player.name}</Name>
-                            <ScoreRow>
-                                {scoreOptions(roundStore.inputHole).map(score => (
-                                    <ScoreButton
-                                        key={score}
-                                        selected={selectedScores[player.id] === score}
-                                        onClick={() => handleSelect(player.id, score)}
-                                    >
-                                        {score}
-                                    </ScoreButton>
-                                ))}
-                            </ScoreRow>
-                        </Row>
-                    ))}
+                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                        <SortableContext
+                            items={roundStore.players.map(p => p.id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            {roundStore.players.map(player => (
+                                <SortableRow key={player.id} player={player}>
+                                    <Name>{player.name}</Name>
+                                    <ScoreRow>
+                                        {scoreOptions(roundStore.inputHole).map(score => (
+                                            <ScoreButton
+                                                key={score}
+                                                selected={selectedScores[player.id] === score}
+                                                onClick={() => handleSelect(player.id, score)}
+                                            >
+                                                {score}
+                                            </ScoreButton>
+                                        ))}
+                                    </ScoreRow>
+                                </SortableRow>
+                            ))}
+                        </SortableContext>
+                    </DndContext>
                     <SaveButton onClick={handleSave}>저장</SaveButton>
                 </>
             )}
@@ -135,6 +215,7 @@ const HoleInfo = styled.div`
 
 const Row = styled.div`
     margin-bottom: 16px;
+    touch-action: pan-y;  /* 세로 스크롤 허용 */
 `;
 
 const Name = styled.div`
@@ -165,4 +246,16 @@ const SaveButton = styled.button`
     background: #222;
     color: white;
     border-radius: 14px;
+`;
+
+const DragHandle = styled.div`
+    cursor: grab;
+    touch-action: none;  /* 🔥 중요 */
+    margin-bottom: 6px;
+`;
+
+const TopRow = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
 `;
