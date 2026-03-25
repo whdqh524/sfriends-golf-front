@@ -148,6 +148,9 @@ const GlobalStyle = createGlobalStyle`
     a,
     div {
         -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none; /* iOS + 일부 안드 */
     }
 
     button {
