@@ -15,9 +15,9 @@ export class GolfStore {
         this.register = {};
     }
 
-    setRegisterInfo({id, name, location, courses}) {
+    setRegisterInfo({id, name, location, courses, mode}) {
         this.register = {
-            id, name, location, courses
+            id, name, location, courses, mode
         }
     }
 
@@ -36,7 +36,11 @@ export class GolfStore {
             });
             course.holes = holes;
         })
-        await axios.post('/golf', data);
+        if(data.mode === 'create') {
+            await axios.post('/golf', data);
+        } else {
+            await axios.patch('/golf', data);
+        }
         await this.getList();
         return this.data.find(golf => golf.name === data.name);
     }
