@@ -76,7 +76,7 @@ const RoundPlay = observer(() => {
 
     const handleSave = () => {
         const par = holes[roundStore.inputHole-1].par;
-        if([3,5].includes(parseInt(par))) {
+        if([3,5].includes(parseInt(par)) && roundStore.golfInfo.rules?.etc?.includes('NearAndLong')) {
             modalStore.open(MODAL_PAYLOAD.SELECT_NEAR_LONG_MODAL({
                 component: NearLongModal,
                 props: {

@@ -51,8 +51,6 @@ export default observer(({ stroke, money, item })=> {
         totalMoney: sum(holeData, 'money'),
     }
 
-    const doubleHole = Array.from(item.doubleHole)
-
     return (
         <PlayerRow>
 

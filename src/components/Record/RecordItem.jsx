@@ -22,8 +22,9 @@ export default function RecordItem({ item, modifyFunc }) {
     const modalStore = useModalStore();
     const userStore = useUserStore();
     const recordStore = useRecordStore();
+    const scoreUserId = ['ALL', 'MY'].includes(recordStore.selectedTab) ? userStore.me.id : parseInt(recordStore.selectedTab);
     const myScore = item.strokeRecords?.find(
-        v => v.userId === userStore.me.id
+        v => v.userId === scoreUserId
     )
 
     const renderDetail = () => (

@@ -10,7 +10,6 @@ export class RoundStore {
     holeBestPlayer = undefined;
     currentHole = 1;
     inputHole = 1;
-    doubleHole = [];
     isHydrated = false; // 🔥 중요
     constructor() {
         makeAutoObservable(this);
@@ -23,7 +22,6 @@ export class RoundStore {
                 holeBestPlayer: this.holeBestPlayer,
                 currentHole: this.currentHole,
                 inputHole: this.inputHole,
-                doubleHole: this.doubleHole,
                 strokeRecords: this.strokeRecords,
                 moneyRecords: this.moneyRecords,
             }));
@@ -40,7 +38,6 @@ export class RoundStore {
             this.holeBestPlayer = data.holeBestPlayer;
             this.currentHole = data.currentHole;
             this.inputHole = data.inputHole;
-            this.doubleHole = data.doubleHole;
             this.strokeRecords = data.strokeRecords;
             this.moneyRecords = data.moneyRecords;
         }
@@ -52,7 +49,6 @@ export class RoundStore {
         this.holeBestPlayer = undefined;
         this.currentHole = 1;
         this.inputHole = 1;
-        this.doubleHole = [];
         this.strokeRecords = [];
         this.moneyRecords = [];
     }
@@ -62,7 +58,7 @@ export class RoundStore {
         const data = {
             type: this.golfInfo.type, golfId: this.golfInfo.golf.id, frontCourseId: this.golfInfo.frontCourse.id,
             backCourseId: this.golfInfo.backCourse.id, baseMoney: this.golfInfo.baseMoney, date: moment(this.golfInfo.date).format('YYYY-MM-DD'),
-            userIds: this.players.map(player => player.id), rules: this.options, writeUserId: getUserStore().me.id
+            userIds: this.players.map(player => player.id), rules: this.golfInfo.rules, writeUserId: getUserStore().me.id
         }
         const res = await axios.post('/round/start', data);
         const round = res.data.data.round;
@@ -75,9 +71,8 @@ export class RoundStore {
         const round = res.data.data.round;
         this.golfInfo = {
             roundId: round.id, type: round.type, golf: round.golf, frontCourse: round.frontCourse, backCourse: round.backCourse,
-            baseMoney: round.baseMoney, date: round.date,
+            baseMoney: round.baseMoney, date: round.date, rules: round.rules, doubleHole: round.doubleHole
         }
-        this.doubleHole= round.doubleHole
         this.strokeRecords= round.strokeRecords;
         this.moneyRecords= round.moneyRecords;
         // this.golfInfo = round;
@@ -116,8 +111,8 @@ export class RoundStore {
         this.holeBestPlayer = player;
     }
 
-    setOptions(options) {
-        this.options = options;
+    setRules(rules) {
+        this.golfInfo['rules'] = rules;
     }
 
     setInputHole(hole) {
@@ -133,7 +128,7 @@ export class RoundStore {
         const res = await axios.patch('/round/record', {holeRecords, bestPlayer: this.holeBestPlayer});
         this.strokeRecords = res.data.data.strokeRecords;
         this.moneyRecords = res.data.data.moneyRecords;
-        this.doubleHole = res.data.data.doubleHole;
+        this.golfInfo.doubleHole = res.data.data.doubleHole;
         this.holeBestPlayer = undefined;
     }
 

@@ -49,7 +49,7 @@ const RoundOption = () => {
     };
 
     const confirm = () => {
-        roundStore.setOptions(options);
+        roundStore.setRules(options);
         roundStore.create().then((roundId) => {
             navigate(`/round/play?roundId=${roundId}`);
         })
