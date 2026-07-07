@@ -11,6 +11,7 @@ import {MODAL_PAYLOAD} from "@/constants/modal.js";
 import UpdatePasswordModal from "@/components/Modal/UpdatePasswordModal.jsx";
 import AlertModal from "@/components/Modal/AlertModal.jsx";
 import {useRecordStore} from "../stores/recordStore.js";
+import axios from 'axios';
 
 const Home = observer(() => {
     const [tab, setTab] = useState('FIELD')
@@ -24,7 +25,7 @@ const Home = observer(() => {
                 clickTab('FIELD');
 
                 if (userStore.rounding) {
-                    modalStore.open(MODAL_PAYLOAD.ALERT_MODAL({
+                    modalStore.open(MODAL_PAYLOAD.ROUND_RECORD_MODAL({
                         component: AlertModal,
                         props: {
                             title: '라운드 진행',
@@ -34,6 +35,9 @@ const Home = observer(() => {
                             onConfirm: async () => {
                                 navigate(`/round/play?roundId=${userStore.rounding.id}`);
                             },
+                            onCancel: async () => {
+                                await axios.post('/round/remove', {roundId: userStore.rounding.id, userId: userStore.me.id})
+                            }
                         },
                     }))
                 }
@@ -164,7 +168,7 @@ const Home = observer(() => {
                 {
                     userStore.showRecords?.map((round, idx) => (<RoundItem key={idx}>
                         <div><span>{round.golf.name}</span>  ({moment(round.date).format('YYYY-MM-DD')})</div>
-                        <Score>{round.strokeRecords.find(data => data.userId === userStore.me?.id).score}</Score>
+                        <Score>{round.strokeRecords.find(data => data.userId === userStore.me?.id)?.score}</Score>
                     </RoundItem>))
                 }
                 {/*<MoreRow onClick={() => navigate(`/${tab}`)}>*/}

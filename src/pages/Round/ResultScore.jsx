@@ -62,10 +62,10 @@ export default observer(({ stroke, money, modifyFunc }) => {
                     const data = holeData[idx]
 
                     return (
-                        <Hole key={idx} onClick={() => {
+                        <Hole key={idx} $multiple={roundStore.doubleHole.includes(idx+1)} onClick={() => {
                             modifyFunc(idx+1)
                         }}>
-                            <HoleNum $multiple={roundStore.golfInfo.doubleHole.includes(idx+1)}>{idx + 1}</HoleNum>
+                            <HoleNum>{idx + 1}</HoleNum>
                             <Par>PAR {hole.par}</Par>
 
                             <Stroke $color={getScoreColor(data.stroke)}>

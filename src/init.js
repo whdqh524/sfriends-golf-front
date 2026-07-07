@@ -13,7 +13,7 @@ const initializeApp = () => {
     axios.interceptors.request.use(function (config, custom) {
         let token = Cookies.get("FRIENDS_GOLF_COOKIE");
         if (!token) {
-            token = localStorage.getItem("accessToken");
+            token = localStorage.getItem("refreshToken");
             config.headers["authorization"] = token;
         }
         if (config.headers?.skipInterceptor) {

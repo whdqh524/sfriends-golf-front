@@ -11,7 +11,9 @@ import {
     SumBox
 } from './styles'
 
-export default function PlayerScore({ stroke, money, item }) {
+import {observer} from "mobx-react";
+
+export default observer(({ stroke, money, item })=> {
 
     const holes = [
         ...item.frontCourse.holes,
@@ -63,8 +65,8 @@ export default function PlayerScore({ stroke, money, item }) {
                     const data = holeData[idx]
 
                     return (
-                        <Hole key={idx}>
-                            <HoleNum $multiple={item.doubleHole.includes(idx+1)}>{idx + 1}</HoleNum>
+                        <Hole key={idx} $multiple={item.doubleHole.includes(idx+1)}>
+                            <HoleNum>{idx + 1}</HoleNum>
                             <Par>PAR {hole.par}</Par>
 
                             <Stroke $color={getScoreColor(data.stroke)}>
@@ -112,4 +114,4 @@ export default function PlayerScore({ stroke, money, item }) {
             </SummaryRow>
         </PlayerRow>
     )
-}
+})

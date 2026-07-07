@@ -1,6 +1,7 @@
 import {createBrowserRouter, Navigate} from "react-router-dom";
 import {PATH} from "./paths";
 import {lazy} from "react";
+import RoundOption from "../pages/Round/RoundOption.jsx";
 
 const Root = lazy(() => import("@/layouts/Root"));
 const Home = lazy(() => import("@/pages/Home"));
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
             {
                 path: '/round/players',
                 element: <PlayerSelect/>
+            },
+            {
+                path: '/round/options',
+                element: <RoundOption/>
             },
             {
                 path: '/round/play',

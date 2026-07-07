@@ -12,6 +12,11 @@ export const Summary = styled.div`
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    
+    .summary-date {
+        color: lightgray;
+        font-size: 13px;
+    }
 `
 
 export const RightBox = styled.div`
@@ -87,15 +92,17 @@ export const Hole = styled.div`
 
     padding: 6px 0px;
     border-radius: 6px;
-    background: #f8f8f8;
+    background: ${({ $multiple }) =>
+            $multiple ? '#fff4db' : '#f8f8f8'};;
 
     min-width: 0; /* 🔥 overflow 방지 핵심 */
+
+   
 `
 
 export const HoleNum = styled.div`
     font-size: 10px;
-    color:  ${({ $multiple }) =>
-            $multiple ? '#d32f2f' : '#999'};
+    color: #999;
 `
 
 export const Par = styled.div`
@@ -140,3 +147,27 @@ export const SumBox = styled.div`
     color: ${({ $highlight }) =>
             $highlight ? '#fff' : '#333'};
 `
+
+export const RemoveRecordButtonRow = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+`;
+export const RemoveRecordButton = styled.div`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    border: none;
+    background: none;
+
+    font-size: 12px;
+    font-weight: 500;
+    color: #999;
+    line-height: 1;
+
+    cursor: pointer;
+`;

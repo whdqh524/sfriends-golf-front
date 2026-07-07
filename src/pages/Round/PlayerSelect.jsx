@@ -20,10 +20,7 @@ const PlayerSelect = observer(({userList}) => {
 
     const confirm = () => {
         roundStore.setPlayers(selected);
-        roundStore.create().then((roundId) => {
-            navigate(`/round/play?roundId=${roundId}`);
-        })
-
+        navigate(`/round/options`);
     };
 
     return (<Container>

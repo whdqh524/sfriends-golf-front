@@ -9,9 +9,7 @@ export default observer(({ type }) => {
     const observerRef = useRef(null)
     useEffect(() => {
         recordStore.clear();
-        recordStore.getList(type).then(() => {
-            setIsInit(false);
-        });
+        recordStore.getList(type).then();
     }, [type, recordStore.selectedTab])
 
     useEffect(() => {

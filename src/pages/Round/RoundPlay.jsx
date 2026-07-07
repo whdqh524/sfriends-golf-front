@@ -2,6 +2,9 @@ import {useNavigate, useSearchParams} from "react-router-dom";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRoundStore } from "@/stores/roundStore.js";
+import { useModalStore} from "@/stores/modalStore.js";
+import {MODAL_PAYLOAD} from "../../constants/modal.js";
+import NearLongModal from "@/components/Modal/NearLongModal.jsx"
 import { observer } from "mobx-react";
 import {
     DndContext,
@@ -21,16 +24,21 @@ import {
 
 import { CSS } from "@dnd-kit/utilities";
 import ResultItem from "@/pages/Round/ResultItem.jsx";
+import axios from "axios";
 
 const RoundPlay = observer(() => {
     const [params] = useSearchParams();
     const roundId = params.get("roundId");
     const roundStore = useRoundStore();
+    const modalStore = useModalStore();
     const navigate = useNavigate();
 
     const [mode, setMode] = useState("input");
     const [selectedScores, setSelectedScores] = useState({});
-
+    const holes = [
+        ...roundStore.golfInfo.frontCourse.holes,
+        ...roundStore.golfInfo.backCourse.holes
+    ]
     const [players, setPlayers] = useState([]);
 
     useEffect(() => {
@@ -67,7 +75,26 @@ const RoundPlay = observer(() => {
     };
 
     const handleSave = () => {
-        roundStore.saveHoleScore(selectedScores).then(() => {setMode("result")});
+        const par = holes[roundStore.inputHole-1].par;
+        if([3,5].includes(parseInt(par))) {
+            modalStore.open(MODAL_PAYLOAD.SELECT_NEAR_LONG_MODAL({
+                component: NearLongModal,
+                props: {
+                    title: `${par===3 ? '니어리스트' : '롱기스트'} 입력`,
+                    data: { step: 1 },
+                    cancelText: 'Skip',
+                    onConfirm: async () => {
+                        roundStore.saveHoleScore(selectedScores).then(() => {setMode("result")});
+                    },
+                    onCancel: async () => {
+                        roundStore.saveHoleScore(selectedScores).then(() => {setMode("result")});
+                    }
+                },
+            }))
+        } else {
+            roundStore.saveHoleScore(selectedScores).then(() => {setMode("result")});
+        }
+
     };
 
     const handleModify = (hole) => {
@@ -161,7 +188,7 @@ const RoundPlay = observer(() => {
                         >
                             {roundStore.players.map(player => (
                                 <SortableRow key={player.id} player={player}>
-                                    <Name>{player.name}</Name>
+                                    {/*<Name>{player.name}</Name>*/}
                                     <ScoreRow>
                                         {scoreOptions(roundStore.inputHole).map(score => (
                                             <ScoreButton

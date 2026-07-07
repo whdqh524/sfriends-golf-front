@@ -7,8 +7,10 @@ import moment from "moment";
 export class RoundStore {
     golfInfo = {};
     players = [];
+    holeBestPlayer = undefined;
     currentHole = 1;
     inputHole = 1;
+    doubleHole = [];
     isHydrated = false; // 🔥 중요
     constructor() {
         makeAutoObservable(this);
@@ -18,8 +20,10 @@ export class RoundStore {
             localStorage.setItem("roundStore", JSON.stringify({
                 golfInfo: this.golfInfo,
                 players: this.players,
+                holeBestPlayer: this.holeBestPlayer,
                 currentHole: this.currentHole,
                 inputHole: this.inputHole,
+                doubleHole: this.doubleHole,
                 strokeRecords: this.strokeRecords,
                 moneyRecords: this.moneyRecords,
             }));
@@ -33,8 +37,10 @@ export class RoundStore {
             const data = JSON.parse(saved);
             this.golfInfo = data.golfInfo;
             this.players = data.players;
+            this.holeBestPlayer = data.holeBestPlayer;
             this.currentHole = data.currentHole;
             this.inputHole = data.inputHole;
+            this.doubleHole = data.doubleHole;
             this.strokeRecords = data.strokeRecords;
             this.moneyRecords = data.moneyRecords;
         }
@@ -43,8 +49,10 @@ export class RoundStore {
     clear() {
         this.golfInfo = {};
         this.players = [];
+        this.holeBestPlayer = undefined;
         this.currentHole = 1;
         this.inputHole = 1;
+        this.doubleHole = [];
         this.strokeRecords = [];
         this.moneyRecords = [];
     }
@@ -54,7 +62,7 @@ export class RoundStore {
         const data = {
             type: this.golfInfo.type, golfId: this.golfInfo.golf.id, frontCourseId: this.golfInfo.frontCourse.id,
             backCourseId: this.golfInfo.backCourse.id, baseMoney: this.golfInfo.baseMoney, date: moment(this.golfInfo.date).format('YYYY-MM-DD'),
-            userIds: this.players.map(player => player.id), writeUserId: getUserStore().me.id
+            userIds: this.players.map(player => player.id), rules: this.options, writeUserId: getUserStore().me.id
         }
         const res = await axios.post('/round/start', data);
         const round = res.data.data.round;
@@ -68,8 +76,8 @@ export class RoundStore {
         this.golfInfo = {
             roundId: round.id, type: round.type, golf: round.golf, frontCourse: round.frontCourse, backCourse: round.backCourse,
             baseMoney: round.baseMoney, date: round.date,
-            doubleHole: round.doubleHole
         }
+        this.doubleHole= round.doubleHole
         this.strokeRecords= round.strokeRecords;
         this.moneyRecords= round.moneyRecords;
         // this.golfInfo = round;
@@ -101,6 +109,14 @@ export class RoundStore {
         this.players = players;
     }
 
+    setHoleBestPlayer(player) {
+        this.holeBestPlayer = player;
+    }
+
+    setOptions(options) {
+        this.options = options;
+    }
+
     setInputHole(hole) {
         this.inputHole = hole;
     }
@@ -111,9 +127,10 @@ export class RoundStore {
             const score = strokeRecords[userId];
             holeRecords.push({roundId: this.golfInfo.roundId, score: score, userId, number: this.inputHole})
         }
-        const res = await axios.patch('/round/record', {holeRecords});
+        const res = await axios.patch('/round/record', {holeRecords, bestPlayer: this.holeBestPlayer});
         this.strokeRecords = res.data.data.strokeRecords;
         this.moneyRecords = res.data.data.moneyRecords;
+        this.holeBestPlayer = undefined;
     }
 
     getHolestrokeRecords(hole) {
@@ -128,7 +145,7 @@ export class RoundStore {
 
     getStroke(number) {
         const result = {};
-        const r = this.strokeRecords.map(strokeRecord => {
+        this.strokeRecords.map(strokeRecord => {
             result[strokeRecord.userId] = strokeRecord[`hole${number}`]
         });
         return result;

@@ -44,22 +44,23 @@ export class UserStore {
     }
 
     async signIn(cellphone, password) {
+        const deviceId = this.getDeviceId();
         const loginResponse = await axios.post('/user/signIn', {
             cellphone,
-            password
+            password,
+            deviceId
         })
 
-        const { accessToken, refreshToken, user } = loginResponse.data.data
-        localStorage.setItem('accessToken', accessToken);
+        const { refreshToken, user } = loginResponse.data.data
         localStorage.setItem('refreshToken', refreshToken);
         this.me = user;
         this.isLogin = true;
     }
 
     async signInWithToken() {
-        const loginResponse = await axios.post('/user/signInWithToken');
-        const { accessToken, refreshToken, user } = loginResponse.data.data
-        localStorage.setItem('accessToken', accessToken);
+        const deviceId = this.getDeviceId();
+        const loginResponse = await axios.post('/user/signInWithToken', {deviceId});
+        const { refreshToken, user } = loginResponse.data.data
         localStorage.setItem('refreshToken', refreshToken);
         this.me = user;
         this.isLogin = true;
@@ -127,6 +128,17 @@ export class UserStore {
 
     setModalConfirmPassword(password) {
         this.updateModal.confirmPassword = password;
+    }
+
+    getDeviceId() {
+        let deviceId = localStorage.getItem("deviceId");
+
+        if (!deviceId) {
+            deviceId = crypto.randomUUID();
+            localStorage.setItem("deviceId", deviceId);
+        }
+
+        return deviceId;
     }
 }
 

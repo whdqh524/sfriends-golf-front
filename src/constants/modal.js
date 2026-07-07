@@ -40,6 +40,20 @@ export const MODAL_PAYLOAD = {
         ...BASE_MODAL_PROPS,
         title: "알림 모달",
     }),
+
+    ROUND_RECORD_MODAL: createModalPayload({
+        ...BASE_CONFIRM_PROPS,
+        title: "라운딩 이어하기"
+    }),
+
+    SELECT_NEAR_LONG_MODAL: createModalPayload({
+        ...BASE_CONFIRM_PROPS,
+    }),
+
+    CONFIRM_MODAL: createModalPayload({
+        ...BASE_CONFIRM_PROPS,
+        title: "확인 모달"
+    })
 };
 
 export const CONFIRM_PAYLOAD = {
