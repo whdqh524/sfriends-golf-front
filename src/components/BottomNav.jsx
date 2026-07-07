@@ -18,6 +18,7 @@ export default function BottomNav() {
                 $active={isActive('/field')}
                 onClick={() => {
                     recordStore.setLoading(true);
+                    recordStore.clearAll();
                     navigate('/field')}
                 }
                 >
@@ -25,7 +26,10 @@ export default function BottomNav() {
                 <span>필드</span>
             </NavItem>
 
-            <HomeButton onClick={() => navigate('/')}>
+            <HomeButton onClick={() => {
+                recordStore.clearAll();
+                navigate('/')}
+            }>
                 <InnerCircle>
                     <MdDashboard size={35}/>
                 </InnerCircle>
@@ -35,6 +39,7 @@ export default function BottomNav() {
                 $active={isActive('/screen')}
                 onClick={() => {
                     recordStore.setLoading(true);
+                    recordStore.clearAll();
                     navigate('/screen')}
                 }
             >

@@ -133,6 +133,7 @@ export class RoundStore {
         const res = await axios.patch('/round/record', {holeRecords, bestPlayer: this.holeBestPlayer});
         this.strokeRecords = res.data.data.strokeRecords;
         this.moneyRecords = res.data.data.moneyRecords;
+        this.doubleHole = res.data.data.doubleHole;
         this.holeBestPlayer = undefined;
     }
 

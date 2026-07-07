@@ -3,10 +3,24 @@ import { useEffect, useRef, useState } from 'react'
 import RecordItem from './RecordItem'
 import {useRecordStore} from "@/stores/recordStore.js";
 import {observer} from "mobx-react";
+import {getUserStore, useUserStore} from "../../stores/userStore.js";
+import ReactSelect from "react-select";
 
-export default observer(({ type }) => {
+export default observer(({ type, userId }) => {
     const recordStore = useRecordStore();
-    const observerRef = useRef(null)
+    const observerRef = useRef(null);
+    const userStore = useUserStore();
+    let userOptions = userStore.allUsers.map(user => ({
+        value: user.id,
+        label: user.name,
+    }));
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        userOptions = getUserStore().allUsers.map(user => ({
+            value: user.id,
+            label: user.name,
+        }));
+    }, [userStore.allUsers]);
     useEffect(() => {
         recordStore.clear();
         recordStore.getList(type).then();
@@ -38,18 +52,41 @@ export default observer(({ type }) => {
         return () => observer.disconnect()
     }, [recordStore.loading, recordStore.hasMore, type])
 
+    // useEffect(() => {
+    //     return () => {
+    //         recordStore.clear();
+    //     }
+    // }, []);
+
     return (
         <Container>
 
             {/* 🔥 탭 */}
             <TabRow>
-                <Tab $tabActive={recordStore.selectedTab === 'MY'} onClick={() => recordStore.setSelectedTab('MY')}>
-                    내 기록
-                </Tab>
-                <Tab $tabActive={recordStore.selectedTab === 'ALL'} onClick={() => recordStore.setSelectedTab('ALL')}>
-                    전체
-                </Tab>
+                <TabGroup>
+                    <Tab $tabActive={recordStore.selectedTab === 'MY'} onClick={() => recordStore.setSelectedTab('MY')}>
+                        내 기록
+                    </Tab>
+                    <Tab $tabActive={recordStore.selectedTab === 'ALL'} onClick={() => recordStore.setSelectedTab('ALL')}>
+                        전체
+                    </Tab>
+                </TabGroup>
+                <SelectWrapper>
+                    <ReactSelect
+                        styles={reactSelectStyles}
+                        options={userOptions}
+                        value={userOptions.find(
+                            option => option.value === recordStore.selectedTab
+                        )}
+                        onChange={(option) =>
+                            recordStore.setSelectedTab(option?.value ?? 'me')
+                        }
+                        placeholder="유저"
+                        isClearable
+                    />
+                </SelectWrapper>
             </TabRow>
+
 
             {recordStore.records?.map((item, idx) => {
                 try {
@@ -100,10 +137,17 @@ const EndText = styled.div`
 `
 
 const TabRow = styled.div`
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
 `
+
+const TabGroup = styled.div`
+    flex: 1;
+    display: flex;
+    gap: 8px;
+`;
 
 const Tab = styled.div`
   flex: 1;
@@ -125,3 +169,30 @@ const Tab = styled.div`
     transform: scale(0.96);
   }
 `
+
+const SelectWrapper = styled.div`
+    width: 170px;
+    flex-shrink: 0;
+`;
+
+const reactSelectStyles = {
+    control: (base) => ({
+        ...base,
+        minHeight: "33px",
+        height: "33px",
+        borderRadius: "25px",
+        borderColor: "#ddd",
+        boxShadow: "none",
+    }),
+    valueContainer: (base) => ({
+        ...base,
+        height: "33px",
+        padding: "0 10px",
+        "font-size": "13px",
+        "text-align": "center"
+    }),
+    indicatorsContainer: (base) => ({
+        ...base,
+        height: "33px",
+    }),
+};

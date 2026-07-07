@@ -23,10 +23,19 @@ export class RecordStore {
         this.totalCount = 0;
         this.hasMore = true;
     }
+    clearAll() {
+        this.records = [];
+        this.offset = 0;
+        this.limit = 10;
+        this.totalCount = 0;
+        this.hasMore = true;
+        this.selectedTab = 'MY'
+    }
     async getList(type) {
         this.loading = true;
-        const baseUrl = this.selectedTab === 'ALL' ? '/round/all' : '/round/me'
-        const url = `${baseUrl}?type=${type}&offset=${this.offset}&limit=${this.limit}`;
+        let baseUrl = this.selectedTab === 'ALL' ? '/round/all' : this.selectedTab === 'MY' ? '/round/me' : `/round/player`
+        let userIdFilter = baseUrl === '/round/player' ? `userId=${this.selectedTab}&` : '';
+        const url = `${baseUrl}?${userIdFilter}type=${type}&offset=${this.offset}&limit=${this.limit}`;
         const response = await axios.get(url);
         const {rounds, count} = response.data.data;
         const map = new Map();

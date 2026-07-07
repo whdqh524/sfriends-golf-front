@@ -56,6 +56,7 @@ const Home = observer(() => {
     }, []);
 
     const clickTab = (value) => {
+        recordStore.clearAll();
         setTab(value);
         userStore.setShowRecord(value);
     }

@@ -92,9 +92,9 @@ export const Hole = styled.div`
 
     padding: 6px 0px;
     border-radius: 6px;
-    background: ${({ $multiple }) =>
-            $multiple ? '#fff4db' : '#f8f8f8'};;
-
+    background: #f8f8f8;
+    border: ${({ $multiple }) =>
+            $multiple ? "1px solid #FD5A1E" : "1px solid transparent"};
     min-width: 0; /* 🔥 overflow 방지 핵심 */
 
    
