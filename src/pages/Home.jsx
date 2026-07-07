@@ -12,6 +12,7 @@ import UpdatePasswordModal from "@/components/Modal/UpdatePasswordModal.jsx";
 import AlertModal from "@/components/Modal/AlertModal.jsx";
 import {useRecordStore} from "../stores/recordStore.js";
 import axios from 'axios';
+import {RemoveRecordButton, RemoveRecordButtonRow} from "@/components/Record/styles.js";
 
 const Home = observer(() => {
     const [tab, setTab] = useState('FIELD')
@@ -177,6 +178,13 @@ const Home = observer(() => {
                 {/*</MoreRow>*/}
             </RoundList>
         </CardSection>
+        <LogoutButtonRow>
+            <LogoutButton onClick={async () => {
+                userStore.logout();
+            }}>
+                로그아웃
+            </LogoutButton>
+        </LogoutButtonRow>
     </Container>);
 });
 
@@ -393,3 +401,27 @@ const MoreRow = styled.div`
         transform: scale(0.98);
     }
 `
+
+const LogoutButtonRow = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+`;
+const LogoutButton = styled.div`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+    margin: 0;
+
+    border: none;
+    background: none;
+
+    font-size: 12px;
+    font-weight: 500;
+    color: #999;
+    line-height: 1;
+
+    cursor: pointer;
+`;

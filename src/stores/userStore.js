@@ -3,6 +3,7 @@ import { makeAutoObservable } from 'mobx'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import {getStore, useStore} from "./index.js";
+import {useCookies} from "react-cookie";
 
 /**
  * @typedef {object} User
@@ -84,9 +85,10 @@ export class UserStore {
     }
 
     logout() {
-        Cookies.remove('accessToken')
+        Cookies.remove("FRIENDS_GOLF_COOKIE");
         localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken')
+        localStorage.removeItem('refreshToken');
+
 
         this.user = null
         this.isLogin = false
