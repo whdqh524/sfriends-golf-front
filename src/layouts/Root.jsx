@@ -18,11 +18,15 @@ const Root = () => {
 
     useEffect(() => {
         if(!userStore.isLogin) {
-            userStore.signInWithToken().catch(() => {
+            userStore.signInWithToken().then(() => {
+                userStore.getAllUsers().then();
+            }).catch(() => {
                 userStore.refresh().catch(() => {
                     navigate("/login");
                 })
             });
+        } else {
+            userStore.getAllUsers().then();
         }
     }, [])
 
