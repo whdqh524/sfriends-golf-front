@@ -79,7 +79,7 @@ export default observer(({ type, userId }) => {
                             option => option.value === recordStore.selectedTab
                         )}
                         onChange={(option) =>
-                            recordStore.setSelectedTab(option?.value ?? 'me')
+                            recordStore.setSelectedTab(option?.value ?? 'MY')
                         }
                         placeholder="유저"
                         isClearable
