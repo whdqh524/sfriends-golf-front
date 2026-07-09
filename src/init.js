@@ -47,7 +47,7 @@ const initializeApp = () => {
             }
         }
         let errorData = {code: error.code, message: error.message};
-        if (error.response.status === 400) {
+        if (error.response && error.response.status === 400) {
             errorData = {code: error.code, message: error.response.data.error};
             if (['AUTH_TOKEN_EXPIRED', 'NOT_EXIST_AUTH_TOKEN'].includes(errorData.code)) {
                 localStorage.removeItem("token")
