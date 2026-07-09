@@ -181,6 +181,7 @@ const Home = observer(() => {
         <LogoutButtonRow>
             <LogoutButton onClick={async () => {
                 userStore.logout();
+                navigate('/login')
             }}>
                 로그아웃
             </LogoutButton>
