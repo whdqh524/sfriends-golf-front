@@ -14,7 +14,8 @@ const DEFAULT_OPTIONS = {
 
 const ETC_OPTIONS = [
     {value: "NearAndLong", name: "니어리스트&롱기스트"},
-    {value: "AllSame", name: "전부 동타"}
+    {value: "AllSame", name: "전부 동타"},
+    {value: "SameThreePeoplePar", name: "세명 이상 파"}
 ];
 
 const RoundOption = () => {
