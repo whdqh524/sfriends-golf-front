@@ -82,7 +82,7 @@ export default observer(({ stroke, money, item })=> {
             <SummaryRow>
                 <SumBox>
                     <div>OUT</div>
-                    <b>{summary.frontScore}({`${summary.frontStrokeScore > 0 ? '+' : '-'}${summary.frontStrokeScore}`})</b>
+                    <b>{summary.frontScore}({`${summary.frontStrokeScore > 0 ? '+' : ''}${summary.frontStrokeScore}`})</b>
                     <Money $positive={summary.frontMoney > 0}>
                         <div className={'summary'}>
                             {summary.frontMoney}
@@ -92,7 +92,7 @@ export default observer(({ stroke, money, item })=> {
 
                 <SumBox>
                     <div>IN</div>
-                    <b>{summary.backScore}({`${summary.backStrokeScore > 0 ? '+' : '-'}${summary.backStrokeScore}`})</b>
+                    <b>{summary.backScore}({`${summary.backStrokeScore > 0 ? '+' : ''}${summary.backStrokeScore}`})</b>
                     <Money $positive={summary.backMoney > 0}>
                         <div className={'summary'}>
                             {summary.backMoney}
@@ -102,7 +102,7 @@ export default observer(({ stroke, money, item })=> {
 
                 <SumBox>
                     <div>TOTAL</div>
-                    <b>{summary.totalScore}({`${summary.totalStrokeScore > 0 ? '+' : '-'}${summary.totalStrokeScore}`})</b>
+                    <b>{summary.totalScore}({`${summary.totalStrokeScore > 0 ? '+' : ''}${summary.totalStrokeScore}`})</b>
                     <Money $positive={money.resultMoney > 0}>
                         <div className={'summary'}>
                             {money.resultMoney}
